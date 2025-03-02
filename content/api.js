@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://tj.2712448668.workers.dev/api"; // Workers 部署地址
+const API_BASE_URL = "https://tj.musdrop.top/api"; // Workers 部署地址
 
 // 通用请求封装
 async function apiRequest(endpoint, method = "GET", body = null) {
