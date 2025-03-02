@@ -1,0 +1,27 @@
+{
+  "name": "NUAA教师评价助手",
+  "description": "让NUAAer的选课更加科学",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": [
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "./popup/popup.html",
+    "default_icon": "hello_extensions.png"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "/content/api.js",
+        "/content/data.js",
+        "/content/comment.js",
+        "/content/control.js",
+        "/content/check.js"
+      ],
+      "matches": [
+        "http://aao-eas.nuaa.edu.cn/eams/*"
+      ]
+    }
+  ]
+}
