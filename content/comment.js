@@ -134,7 +134,7 @@ function evaluateCourseWindow(courseInfo) {
   document.body.appendChild(overlay);
 
   // 8. 动态加载评论逻辑
-  let page = 0;
+  let page = 1;
   let isLoading = false;
   let hasMoreComments = true;
 
