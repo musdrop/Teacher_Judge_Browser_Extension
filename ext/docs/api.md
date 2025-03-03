@@ -53,6 +53,7 @@
 包含：
 - 评论序号：`commentId`（自增）
 - 评论内容：`commentContent`
+- 课程序号：`lessonId`
 - 评分：`score`
 - 评论时间：`commentTime`
 - 点赞数：`likes`
