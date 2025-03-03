@@ -10,109 +10,131 @@
 // 评论窗口
 function evaluateCourseWindow(courseInfo) {
   // 1. 创建弹出窗口的遮罩层
-  let overlay = document.createElement("div");
-  overlay.style.position = "fixed";
-  overlay.style.top = "0";
-  overlay.style.left = "0";
-  overlay.style.width = "100%";
-  overlay.style.height = "100%";
-  overlay.style.backgroundColor = "rgba(0,0,0,0.5)";
-  overlay.style.zIndex = "1000";
+  const overlay = document.createElement("div");
+  setStyles(overlay, {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    zIndex: "1000"
+  });
 
   // 2. 创建正方形窗口
-  let popup = document.createElement("div");
-  popup.style.position = "fixed";
-  popup.style.width = "70vh"; // 正方形窗口
-  popup.style.height = "70vh";
-  popup.style.top = "10vh"; // 上下留出间距
-  popup.style.left = "50%";
-  popup.style.transform = "translateX(-50%)";
-  popup.style.backgroundColor = "#fff";
-  popup.style.borderRadius = "10px";
-  popup.style.boxShadow = "0px 4px 10px rgba(0,0,0,0.2)";
-  popup.style.display = "flex";
-  popup.style.flexDirection = "column";
-  popup.style.overflow = "hidden";
+  const popup = document.createElement("div");
+  setStyles(popup, {
+    position: "fixed",
+    width: "70vh",
+    height: "70vh",
+    top: "10vh",
+    left: "50%",
+    transform: "translateX(-50%)",
+    backgroundColor: "#fff",
+    borderRadius: "10px",
+    boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden"
+  });
 
   // 3. 关闭按钮
-  let closeButton = document.createElement("span");
+  const closeButton = document.createElement("span");
   closeButton.innerHTML = "&times;";
-  closeButton.style.position = "absolute";
-  closeButton.style.top = "10px";
-  closeButton.style.right = "15px";
-  closeButton.style.fontSize = "24px";
-  closeButton.style.cursor = "pointer";
+  setStyles(closeButton, {
+    position: "absolute",
+    top: "10px",
+    right: "15px",
+    fontSize: "24px",
+    cursor: "pointer"
+  });
   closeButton.onclick = () => document.body.removeChild(overlay);
 
   // 4. 顶部课程信息（评分+教师名称）
-  let header = document.createElement("div");
-  header.style.padding = "10px";
-  header.style.textAlign = "center";
-  header.style.borderBottom = "1px solid #ddd";
+  const header = document.createElement("div");
+  setStyles(header, {
+    padding: "10px",
+    textAlign: "center",
+    borderBottom: "1px solid #ddd"
+  });
 
-  let courseTitle = document.createElement("h3");
+  const courseTitle = document.createElement("h3");
   courseTitle.textContent = `${courseInfo.课程名称} - ${courseInfo.教师名称}`;
 
-  let rating = document.createElement("div");
+  const rating = document.createElement("div");
   rating.innerHTML = `评分: ${generateStarRating(courseInfo.课程评分)}`;
 
   header.appendChild(courseTitle);
   header.appendChild(rating);
 
   // 5. 评论区（可滚动）
-  let commentsContainer = document.createElement("div");
-  commentsContainer.style.flex = "1";
-  commentsContainer.style.overflowY = "auto";
-  commentsContainer.style.padding = "10px";
-  commentsContainer.style.position = "relative";
+  const commentsContainer = document.createElement("div");
+  setStyles(commentsContainer, {
+    flex: "1",
+    overflowY: "auto",
+    padding: "10px",
+    position: "relative"
+  });
 
-  let loadingIndicator = document.createElement("div");
+  const loadingIndicator = document.createElement("div");
   loadingIndicator.textContent = "加载中...";
-  loadingIndicator.style.textAlign = "center";
-  loadingIndicator.style.padding = "10px";
-  loadingIndicator.style.display = "none"; // 初始隐藏
+  setStyles(loadingIndicator, {
+    textAlign: "center",
+    padding: "10px",
+    display: "none"
+  });
 
-  let noMoreComments = document.createElement("div");
+  const noMoreComments = document.createElement("div");
   noMoreComments.textContent = "没有更多评论了";
-  noMoreComments.style.textAlign = "center";
-  noMoreComments.style.padding = "10px";
-  noMoreComments.style.display = "none"; // 初始隐藏
+  setStyles(noMoreComments, {
+    textAlign: "center",
+    padding: "10px",
+    display: "none"
+  });
 
   commentsContainer.appendChild(loadingIndicator);
   commentsContainer.appendChild(noMoreComments);
 
   // 6. 底部输入框 + 评分选择 + 发送按钮
-  let inputContainer = document.createElement("div");
-  inputContainer.style.padding = "10px";
-  inputContainer.style.borderTop = "1px solid #ddd";
-  inputContainer.style.display = "flex";
-  inputContainer.style.alignItems = "center";
+  const inputContainer = document.createElement("div");
+  setStyles(inputContainer, {
+    padding: "10px",
+    borderTop: "1px solid #ddd",
+    display: "flex",
+    alignItems: "center"
+  });
 
-  let inputField = document.createElement("input");
+  const inputField = document.createElement("input");
   inputField.type = "text";
   inputField.placeholder = "输入评论...";
-  inputField.style.flex = "2";
-  inputField.style.padding = "5px";
-  inputField.style.marginRight = "10px";
+  setStyles(inputField, {
+    flex: "2",
+    padding: "5px",
+    marginRight: "10px"
+  });
 
   // 评分选择
-  let ratingSelect = document.createElement("select");
-  ratingSelect.style.marginRight = "10px";
-  ratingSelect.style.padding = "5px";
+  const ratingSelect = document.createElement("select");
+  setStyles(ratingSelect, {
+    marginRight: "10px",
+    padding: "5px"
+  });
   for (let i = 1; i <= 5; i++) {
-    let option = document.createElement("option");
+    const option = document.createElement("option");
     option.value = i;
     option.textContent = i + "分";
     ratingSelect.appendChild(option);
   }
 
-  let sendButton = document.createElement("button");
+  const sendButton = document.createElement("button");
   sendButton.textContent = "发送";
-  sendButton.style.padding = "5px 10px";
-  sendButton.style.cursor = "pointer";
+  setStyles(sendButton, {
+    padding: "5px 10px",
+    cursor: "pointer"
+  });
   sendButton.onclick = () => {
-    let content = inputField.value.trim();
-    let ratingValue = parseInt(ratingSelect.value);
+    const content = inputField.value.trim();
+    const ratingValue = parseInt(ratingSelect.value);
     if (content === "") {
       alert("评论不能为空！");
       return;
@@ -145,7 +167,7 @@ function evaluateCourseWindow(courseInfo) {
     loadingIndicator.style.display = "block";
 
     try {
-      let newComments = await fetchCommentsFromServer(courseInfo, page);
+      const newComments = await fetchCommentsFromServer(courseInfo, page);
       if (newComments.length === 0) {
         hasMoreComments = false;
         noMoreComments.style.display = "block";
@@ -178,38 +200,42 @@ function evaluateCourseWindow(courseInfo) {
 
 // 生成星级评分的 HTML
 function generateStarRating(rating) {
-  let fullStars = Math.floor(rating);
-  let halfStar = rating % 1 > 0 ? 1 : 0;
+  const fullStars = Math.floor(rating);
+  const halfStar = rating % 1 > 0 ? 1 : 0;
   return "⭐".repeat(fullStars) + (halfStar ? "✨" : "") + ` - ${rating}`;
 }
 
 // 生成评论 DOM
 function createCommentElement(comment) {
-  let commentBox = document.createElement("div");
-  commentBox.style.padding = "10px";
-  commentBox.style.borderBottom = "1px solid #ddd";
+  const commentBox = document.createElement("div");
+  setStyles(commentBox, {
+    padding: "10px",
+    borderBottom: "1px solid #ddd"
+  });
 
-  let userInfo = document.createElement("p");
+  const userInfo = document.createElement("p");
   userInfo.innerHTML = `<strong>${comment.user}</strong> - ${generateStarRating(
     comment.rating
   )}`;
 
-  let commentText = document.createElement("p");
+  const commentText = document.createElement("p");
   commentText.textContent = comment.content;
 
-  let commentFooter = document.createElement("div");
-  commentFooter.style.display = "flex";
-  commentFooter.style.justifyContent = "space-between";
-  commentFooter.style.alignItems = "center";
+  const commentFooter = document.createElement("div");
+  setStyles(commentFooter, {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center"
+  });
 
-  let time = document.createElement("span");
+  const time = document.createElement("span");
   time.textContent = comment.time;
 
-  let likeDislike = document.createElement("div");
+  const likeDislike = document.createElement("div");
   likeDislike.innerHTML = `<span style="cursor:pointer;">👍 ${comment.likes}</span> <span style="margin-left:10px; cursor:pointer;">👎 ${comment.dislikes}</span>`;
   // 点赞和点踩的逻辑
   likeDislike.children[0].onclick = async function () {
-    let isSuc = await like(comment);
+    const isSuc = await like(comment);
     if (!isSuc) {
       alert("点赞失败！");
       return;
@@ -217,7 +243,7 @@ function createCommentElement(comment) {
     likeDislike.children[0].textContent = `👍 ${++comment.likes}`;
   };
   likeDislike.children[1].onclick = async function () {
-    let isSuc = await dislike(comment);
+    const isSuc = await dislike(comment);
     if (!isSuc) {
       alert("点踩失败！");
       return;
@@ -233,4 +259,11 @@ function createCommentElement(comment) {
   commentBox.appendChild(commentFooter);
 
   return commentBox;
+}
+
+// 设置样式的辅助函数
+function setStyles(element, styles) {
+  for (const property in styles) {
+    element.style[property] = styles[property];
+  }
 }

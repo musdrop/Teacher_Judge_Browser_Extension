@@ -13,20 +13,19 @@ function extractCourseInfo(
     return null;
   }
 
+  const getTextContent = (index) => cells[index]?.textContent.trim() || "未知";
+
   // 获取课程序号
-  let lessonId = cells[lessonIdIndex].textContent.trim();
+  let lessonId = getTextContent(lessonIdIndex);
 
   // 提取课程代码
   let courseCode = lessonId.split(".")[0]; // 以 `.` 分割，并取第一部分
 
   // 获取课程名称
-  let courseName = cells[courseNameIndex].textContent.trim();
+  let courseName = getTextContent(courseNameIndex);
 
   // 获取教师名称
-  let teacherName =
-    teacherNameIndex == -1
-      ? "未知"
-      : cells[teacherNameIndex].textContent.trim();
+  let teacherName = teacherNameIndex === -1 ? "未知" : getTextContent(teacherNameIndex);
 
   // 返回课程信息对象
   return {
@@ -66,17 +65,13 @@ async function addScoreAndEvaluateColumn(thead, tbody) {
   let teacherNameIndex = -1;
 
   for (let i = 0; i < headerCells.length; i++) {
-    if (headerCells[i].textContent.trim() === "课程序号") {
+    const textContent = headerCells[i].textContent.trim();
+    if (textContent === "课程序号") {
       lessonIdIndex = i;
-      continue;
-    }
-    if (headerCells[i].textContent.trim().includes("教师")) {
+    } else if (textContent.includes("教师")) {
       teacherNameIndex = i;
-      continue;
-    }
-    if (headerCells[i].textContent.trim() === "课程名称") {
+    } else if (textContent === "课程名称") {
       courseNameIndex = i;
-      continue;
     }
   }
 
@@ -131,14 +126,9 @@ async function addScoreAndEvaluateColumn(thead, tbody) {
     // 异步获取评分并更新显示
     try {
       let score = await getScore(courseInfo); // 获取评分
-      if (score=="N/A"){
-        score="暂无评分";
-      }
-      else{
-        score = parseFloat(score).toFixed(1); // 保留一位小数
-      }
+      score = score === "N/A" ? "暂无评分" : parseFloat(score).toFixed(1); // 保留一位小数或显示暂无评分
       // 将评分保留一位小数并保存到课程信息对象中
-      courseInfo.课程评分 = score
+      courseInfo.课程评分 = score;
       scoreSpan.textContent = score; // 显示评分
     } catch (error) {
       console.error("获取评分失败：", error);
