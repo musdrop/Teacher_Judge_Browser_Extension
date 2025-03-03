@@ -20,7 +20,7 @@
         "/content/check.js"
       ],
       "matches": [
-        "https://aao-eas.nuaa.edu.cn/eams/*"
+        "*://aao-eas.nuaa.edu.cn/eams/*"
       ]
     }
   ]

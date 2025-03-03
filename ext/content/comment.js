@@ -290,7 +290,7 @@ function createCommentElement(comment) {
   userInfo.innerHTML = `<strong>${comment.user}</strong> - ${generateStarRating(
     comment.rating
   )}`;
-
+  
   const commentText = document.createElement("p");
   commentText.textContent = comment.content;
 

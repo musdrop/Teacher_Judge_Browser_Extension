@@ -1,5 +1,4 @@
 console.log("check.js loaded");
-
 // 检测课程详情界面
 function CheckCoursesTable() {
   console.log("CheckCoursesTable_start");
