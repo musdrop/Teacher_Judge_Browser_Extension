@@ -1,20 +1,20 @@
 console.log("check.js loaded");
-
-//检测课程详情界面
+// 检测课程详情界面
 function CheckCoursesTable() {
   console.log("CheckCoursesTable_start");
   const tableEs = getCoursesTable();
 
-  if (tableEs) {
+  if (!tableEs) {
     console.log("未找到课程表格");
-    const { thead, tbody } = tableEs;
-    addScoreAndEvaluateColumn(thead, tbody);
+    return;
   }
 
-  console.log("CheckCoursesTable_end1");
+  const { thead, tbody } = tableEs;
+  addScoreAndEvaluateColumn(thead, tbody);
+  console.log("CheckCoursesTable_end");
 }
 
-//获取课程表格的thead和tbody元素
+// 获取课程表格的thead和tbody元素
 function getCoursesTable() {
   // 先定位 id 为 mainTable 的 table
   let mtable = document.querySelector("#mainTable");
@@ -59,13 +59,10 @@ function getCoursesTable() {
     console.log("未找到 <tbody> 节点");
     return null;
   }
-  console.log("getT");
+
+  console.log("成功获取课程表格的 thead 和 tbody");
   return { thead, tbody };
 }
-
-/**
- * 在document上代理页面更新事件绑定检测函数
- */
 
 // 防抖函数：在等待时间内如果再次调用，则重新计时
 function debounce(func, wait) {
