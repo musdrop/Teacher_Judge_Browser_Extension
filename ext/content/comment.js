@@ -176,6 +176,7 @@ function evaluateCourseWindow(courseInfo) {
   }
 
   let ratingValue = 3;
+  updateStarRating(ratingContainer, ratingValue);// 初始化星级评分显示
 
   function updateStarRating(container, value) {
     requestAnimationFrame(() => {

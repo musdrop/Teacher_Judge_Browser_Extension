@@ -34,7 +34,7 @@ function submitComment(content, rating, courseInfo) {
   postComment(lessonInfo, content, rating);
 }
 
-// 模拟获取评论
+// 获取评论
 async function fetchCommentsFromServer(courseInfo, page) {
   let comments = await getLessonComments(courseInfo.课程序号, page);
   /*    {

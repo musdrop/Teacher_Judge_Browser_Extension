@@ -16,6 +16,12 @@
       "database_name": "tj",
       "database_id": "ff3e797a-a930-4242-a3f1-141dfcc94a99"
     }
+  ],
+    "routes": [
+    {
+      "pattern": "tj.musdrop.top",
+      "custom_domain": true
+    }
   ]
   /**
    * Smart Placement
