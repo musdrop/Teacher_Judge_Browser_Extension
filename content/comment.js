@@ -9,6 +9,9 @@
 
 // 评论窗口
 function evaluateCourseWindow(courseInfo) {
+  // 禁用页面滚动
+  document.body.style.overflow = "hidden";
+
   // 1. 创建弹出窗口的遮罩层
   const overlay = document.createElement("div");
   setStyles(overlay, {
@@ -18,7 +21,8 @@ function evaluateCourseWindow(courseInfo) {
     width: "100%",
     height: "100%",
     backgroundColor: "rgba(0,0,0,0.5)",
-    zIndex: "1000"
+    zIndex: "1000",
+    overflowY: "auto" // 允许遮罩层滚动
   });
 
   // 2. 创建正方形窗口
@@ -48,7 +52,11 @@ function evaluateCourseWindow(courseInfo) {
     fontSize: "24px",
     cursor: "pointer"
   });
-  closeButton.onclick = () => document.body.removeChild(overlay);
+  closeButton.onclick = () => {
+    document.body.removeChild(overlay);
+    // 恢复页面滚动
+    document.body.style.overflow = "auto";
+  };
 
   // 4. 顶部课程信息（评分+教师名称）
   const header = document.createElement("div");
