@@ -22,7 +22,12 @@ async function dislike(comment) {
 }
 
 // 发送评论
-function submitComment(content, rating, courseInfo) {
+async function submitComment(
+  content,
+  rating,
+  courseInfo,
+  handleCommentSubmitSuccess
+) {
   console.log("提交评论:", { content, rating, courseInfo });
   //lessonId, courseCode, courseName, teacherName
   let lessonInfo = {
@@ -31,7 +36,21 @@ function submitComment(content, rating, courseInfo) {
     courseName: courseInfo.课程名称,
     teacherName: courseInfo.教师名称,
   };
-  postComment(lessonInfo, content, rating);
+  // 显示加载视图
+  toggleOverlay(true);
+  //返回本次评论的id
+  let result = await postComment(lessonInfo, content, rating);
+  // 隐藏加载视图
+  toggleOverlay(false);
+  if (result) {
+    // 提交成功
+    alert("评论发布成功");
+    // 处理评论发布成功
+    handleCommentSubmitSuccess();
+  } else {
+    // 提交失败
+    alert("评论发布失败");
+  }
 }
 
 // 获取评论

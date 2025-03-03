@@ -25,7 +25,8 @@ function extractCourseInfo(
   let courseName = getTextContent(courseNameIndex);
 
   // 获取教师名称
-  let teacherName = teacherNameIndex === -1 ? "未知" : getTextContent(teacherNameIndex);
+  let teacherName =
+    teacherNameIndex === -1 ? "未知" : getTextContent(teacherNameIndex);
 
   // 返回课程信息对象
   return {
@@ -118,21 +119,31 @@ async function addScoreAndEvaluateColumn(thead, tbody) {
     evaluateButton.href = "javascript:void(0)";
     evaluateButton.className = "lessonListOperator"; // 使样式与补选/重修按钮一致
     evaluateButton.style.marginLeft = "10px"; // 评分和按钮之间的间隙
-    evaluateButton.onclick = () => evaluateCourseWindow(courseInfo); // 绑定函数
+
+    // 更新评分显示
+    let updateScore = async () => {
+      try {
+        let score = await getScore(courseInfo);
+        score = score === "N/A" ? "暂无评分" : parseFloat(score).toFixed(1);
+        courseInfo.课程评分 = score;
+        scoreSpan.textContent = score;
+      } catch (error) {
+        console.error("获取评分失败：", error);
+        scoreSpan.textContent = "获取失败";
+      }
+    };
+
+    // 评论信息变更处理函数，目前仅处理评论窗口内用户发布评论后导致的评分变动
+    const handleInfoChange = async () => {
+      await updateScore();
+    };
+    evaluateButton.onclick = () =>
+      evaluateCourseWindow(courseInfo, handleInfoChange); // 绑定函数
 
     scoreCell.appendChild(evaluateButton);
     row.insertBefore(scoreCell, cells[courseNameIndex + 1]); // 插入到课程名称之后
 
     // 异步获取评分并更新显示
-    try {
-      let score = await getScore(courseInfo); // 获取评分
-      score = score === "N/A" ? "暂无评分" : parseFloat(score).toFixed(1); // 保留一位小数或显示暂无评分
-      // 将评分保留一位小数并保存到课程信息对象中
-      courseInfo.课程评分 = score;
-      scoreSpan.textContent = score; // 显示评分
-    } catch (error) {
-      console.error("获取评分失败：", error);
-      scoreSpan.textContent = "获取失败";
-    }
+    await updateScore();
   });
 }

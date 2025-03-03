@@ -8,7 +8,7 @@
  */
 
 // 评论窗口
-function evaluateCourseWindow(courseInfo) {
+function evaluateCourseWindow(courseInfo, handleInfoChange) {
   // 禁用页面滚动
   document.body.style.overflow = "hidden";
 
@@ -25,6 +25,26 @@ function evaluateCourseWindow(courseInfo) {
     overflowY: "auto", // 允许遮罩层滚动
     transition: "opacity 0.3s ease", // 添加淡入淡出效果
     opacity: "0",
+  });
+  // 创建加载时遮罩
+  const loadingOverlay = document.createElement("div");
+  loadingOverlay.id = "loading";
+  loadingOverlay.className = "loading";
+  loadingOverlay.textContent = "加载中...";
+  setStyles(loadingOverlay, {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100%",
+    background: "rgba(0, 0, 0, 0.5)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "white",
+    fontSize: "24px",
+    display: "none",
+    zIndex: "9999", // 确保加载位于最顶层
   });
 
   // 2. 创建正方形窗口
@@ -64,9 +84,9 @@ function evaluateCourseWindow(courseInfo) {
     popup.style.transform = "translateX(-50%) scale(0.9)";
     setTimeout(() => {
       document.body.removeChild(overlay);
-      // 恢复页面滚动
-      document.body.style.overflow = "auto";
     }, 300);
+    // 恢复页面滚动
+    document.body.style.overflow = "auto";
   };
 
   // 4. 顶部课程信息（评分+教师名称）
@@ -175,8 +195,7 @@ function evaluateCourseWindow(courseInfo) {
     ratingContainer.appendChild(star);
   }
 
-  let ratingValue = 3;
-  updateStarRating(ratingContainer, ratingValue);// 初始化星级评分显示
+  let ratingValue = 0;
 
   function updateStarRating(container, value) {
     requestAnimationFrame(() => {
@@ -205,7 +224,17 @@ function evaluateCourseWindow(courseInfo) {
       alert("评论和评分不能为空！");
       return;
     }
-    submitComment(content, ratingValue, courseInfo);
+    const handleCommentSubmitSuccess = async () => {
+      closeButton.click();
+      await handleInfoChange();
+      evaluateCourseWindow(courseInfo, handleInfoChange);
+    };
+    submitComment(
+      content,
+      ratingValue,
+      courseInfo,
+      handleCommentSubmitSuccess // 处理评论发布成功
+    );
     inputField.value = ""; // 清空输入框
     updateStarRating(ratingContainer, 0); // 重置星级评分
     ratingValue = 0;
@@ -220,6 +249,7 @@ function evaluateCourseWindow(courseInfo) {
   popup.appendChild(commentsContainer);
   popup.appendChild(inputContainer);
   overlay.appendChild(popup);
+  document.body.appendChild(loadingOverlay);
   document.body.appendChild(overlay);
 
   // 显示弹窗
@@ -291,7 +321,7 @@ function createCommentElement(comment) {
   userInfo.innerHTML = `<strong>${comment.user}</strong> - ${generateStarRating(
     comment.rating
   )}`;
-  
+
   const commentText = document.createElement("p");
   commentText.textContent = comment.content;
 
@@ -363,5 +393,15 @@ function createCommentElement(comment) {
 function setStyles(element, styles) {
   for (const property in styles) {
     element.style[property] = styles[property];
+  }
+}
+
+// 显示或隐藏加载遮罩层
+function toggleOverlay(show) {
+  const overlay = document.getElementById("loading");
+  if (show) {
+    overlay.style.display = "flex";
+  } else {
+    overlay.style.display = "none";
   }
 }
