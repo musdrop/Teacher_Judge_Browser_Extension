@@ -47,43 +47,47 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
   }
 
   // 1. 在 <thead> 里找到 "课程名称" 所在列索引，并在其后插入 "评分" 列
-  let tr = thead.querySelectorAll("tr");
-  // 如果tr不止一个，使用第二个，处理全校开课查询界面特殊情况
-  if (tr.length > 1) {
-    // 搜索行，若干个输入框所在行
-    let fbar = tr[0];
-    tr = tr[1];
-
-    //全校开课查询处理显示异常
-    if (!update) {
-      const fcells = fbar.children;
-      const fcell = document.createElement("th");
-      fcell.title = "课程评分";
-      setStyles(fcell, {
-        width: "120px",
-        padding: "3px",
-      });
-      const fdiv = document.createElement("div");
-      setStyles(fdiv, {
-        marginRight: "6px",
-      });
-      const finput = document.createElement("input");
-      finput.type = "text";
-      finput.name = "lesson.course.score";
-      finput.maxLength = "100";
-      finput.value = "";
-      setStyles(finput, {
-        width: "100%",
-      });
-      // 禁用输入
-      finput.disabled = true;
-      fdiv.appendChild(finput);
-      fcell.appendChild(fdiv);
-      fbar.insertBefore(fcell, fcells[3]);
+  const trs = thead.querySelectorAll("tr");
+  // 如果tr不止一个，使用第二个
+  let tr = trs.length > 1 ? trs[1] : trs[0];
+  // 处理全校开课查询界面等需要插入搜索栏的特殊情况
+  const insertSearchBar = (index) => {
+    // 无顶部搜索栏直接返回
+    if (trs.length <= 1) return;
+    // 是选课界面index+1（搜索栏相比表格多了一个查询按钮列）
+    // 判断url中是否含"stdElectCourse"，含有则为选课界面
+    let href = window.location.href;
+    if (href.includes("stdElectCourse")) {
+      index = index + 1;
     }
-  } else {
-    tr = tr[0];
-  }
+    // 搜索行，若干个输入框所在行
+    let fbar = trs[0];
+    const fcells = fbar.children;
+    const fcell = document.createElement("th");
+    fcell.title = "课程评分";
+    setStyles(fcell, {
+      width: "120px",
+      padding: "3px",
+    });
+    const fdiv = document.createElement("div");
+    setStyles(fdiv, {
+      marginRight: "6px",
+    });
+    const finput = document.createElement("input");
+    finput.type = "text";
+    finput.name = "lesson.course.score";
+    finput.maxLength = "100";
+    finput.value = "";
+    setStyles(finput, {
+      width: "100%",
+    });
+    // 禁用输入
+    finput.disabled = true;
+    fdiv.appendChild(finput);
+    fcell.appendChild(fdiv);
+    fbar.insertBefore(fcell, fcells[index]);
+  };
+
 
   let headerCells = tr.children;
   let courseNameIndex = -1;
@@ -106,13 +110,16 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
     return;
   }
 
-  // 在 "课程名称" 后面插入 "评分" 列
+  // 在 "课程名称" 后面插入 "评分" 列及其搜索栏
   // 如果为 body 局部更新，则不插入
   if (!update) {
+    insertSearchBar(courseNameIndex + 1);
     let scoreHeader = document.createElement("th");
     scoreHeader.textContent = "评分";
-    scoreHeader.style.textAlign = "center";
-    scoreHeader.style.width = "120px"; // 限制列宽
+    setStyles(scoreHeader, {
+      textAlign: "center",
+      width: "120px",
+    });
     tr.insertBefore(scoreHeader, headerCells[courseNameIndex + 1]);
   }
 
