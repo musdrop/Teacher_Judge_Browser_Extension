@@ -77,7 +77,7 @@ export default {
 				}
 
 				await env.DB.prepare(
-					"INSERT INTO comment (lessonId, commentContent,score ,commentTime, likes, dislikes) VALUES (?, ?, ? ,datetime('now'), 0, 0)"
+					"INSERT INTO comment (lessonId, commentContent,score ,commentTime, likes, dislikes) VALUES (?, ?, ? ,datetime('now','+8 hours'), 0, 0)"
 				)
 					.bind(lessonId, commentContent, score)
 					.run();
