@@ -221,12 +221,15 @@ function evaluateCourseWindow(courseInfo, handleInfoChange) {
   sendButton.onclick = () => {
     const content = inputField.value.trim();
     if (content === "" || ratingValue === 0) {
-      alert("评论和评分不能为空！");
+      showToast("评论和评分不能为空", "error");
       return;
     }
     const handleCommentSubmitSuccess = async () => {
+      // 关闭弹窗
       closeButton.click();
+      // 更新评分
       await handleInfoChange();
+      // 重载评论窗口
       evaluateCourseWindow(courseInfo, handleInfoChange);
     };
     submitComment(
@@ -351,11 +354,14 @@ function createCommentElement(comment) {
     marginRight: "10px",
   });
   likeButton.onclick = async function () {
+    toggleLoadingOverlay(true);
     const isSuc = await like(comment);
+    toggleLoadingOverlay(false);
     if (!isSuc) {
-      alert("点赞失败！");
+      showToast("点赞失败", "error");
       return;
     }
+    showToast("点赞成功", "notice");
     likeButton.textContent = `👍 ${++comment.likes}`;
   };
 
@@ -368,11 +374,14 @@ function createCommentElement(comment) {
     backgroundColor: "#ffebee",
   });
   dislikeButton.onclick = async function () {
+    toggleLoadingOverlay(true);
     const isSuc = await dislike(comment);
+    toggleLoadingOverlay(false);
     if (!isSuc) {
-      alert("点踩失败！");
+      showToast("点踩失败", "error");
       return;
     }
+    showToast("点踩成功", "notice");
     dislikeButton.textContent = `👎 ${++comment.dislikes}`;
   };
 
@@ -390,7 +399,7 @@ function createCommentElement(comment) {
 }
 
 // 显示或隐藏加载遮罩层
-function toggleOverlay(show) {
+function toggleLoadingOverlay(show) {
   const overlay = document.getElementById("loading");
   if (show) {
     overlay.style.display = "flex";

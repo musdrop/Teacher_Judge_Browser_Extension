@@ -37,11 +37,11 @@ async function submitComment(
     teacherName: courseInfo.教师名称,
   };
   // 显示加载视图
-  toggleOverlay(true);
+  toggleLoadingOverlay(true);
   //返回本次评论的id
   let result = await postComment(lessonInfo, content, rating);
   // 隐藏加载视图
-  toggleOverlay(false);
+  toggleLoadingOverlay(false);
   if (result) {
     // 提交成功
     showToast("评论发布成功", "notice");

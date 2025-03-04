@@ -144,6 +144,6 @@ async function addScoreAndEvaluateColumn(thead, tbody) {
     row.insertBefore(scoreCell, cells[courseNameIndex + 1]); // 插入到课程名称之后
 
     // 异步获取评分并更新显示
-    await updateScore();
+    updateScore();
   });
 }
