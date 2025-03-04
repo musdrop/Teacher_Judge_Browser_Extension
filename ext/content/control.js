@@ -39,23 +39,47 @@ function extractCourseInfo(
 }
 
 // 处理表格
-async function addScoreAndEvaluateColumn(thead, tbody) {
+async function addScoreAndEvaluateColumn(thead, tbody, update) {
   if (!thead || !tbody) {
     console.error("thead 或 tbody 为空，无法继续执行");
     return;
   }
-
+  
   // 1. 在 <thead> 里找到 "课程名称" 所在列索引，并在其后插入 "评分" 列
   let tr = thead.querySelectorAll("tr");
   // 如果tr不止一个，使用第二个，处理全校开课查询界面特殊情况
   if (tr.length > 1) {
+    // 搜索行，若干个输入框所在行
     let fbar = tr[0];
     tr = tr[1];
+
     //全校开课查询处理显示异常
-    let fcells = fbar.children;
-    //复制第4个元素在其后面
-    let fcell = fcells[3].cloneNode(true);
-    fbar.insertBefore(fcell, fcells[4]);
+    if (!update) {
+      const fcells = fbar.children;
+      const fcell = document.createElement("th");
+      fcell.title = "课程评分";
+      setStyles(fcell, {
+        width: "80px",
+        padding: "3px",
+      });
+      const fdiv = document.createElement("div");
+      setStyles(fdiv, {
+        marginRight: "6px",
+      });
+      const finput = document.createElement("input");
+      finput.type = "text";
+      finput.name = "lesson.course.score";
+      finput.maxLength = "100";
+      finput.value = "";
+      setStyles(finput, {
+        width: "100%",
+      });
+      // 禁用输入
+      finput.disabled = true;
+      fdiv.appendChild(finput);
+      fcell.appendChild(fdiv);
+      fbar.insertBefore(fcell, fcells[3]);
+    }
   } else {
     tr = tr[0];
   }
@@ -82,11 +106,14 @@ async function addScoreAndEvaluateColumn(thead, tbody) {
   }
 
   // 在 "课程名称" 后面插入 "评分" 列
-  let scoreHeader = document.createElement("th");
-  scoreHeader.textContent = "评分";
-  scoreHeader.style.textAlign = "center";
-  scoreHeader.style.width = "80px"; // 限制列宽
-  tr.insertBefore(scoreHeader, headerCells[courseNameIndex + 1]);
+  // 如果为 body 局部更新，则不插入
+  if (!update) {
+    let scoreHeader = document.createElement("th");
+    scoreHeader.textContent = "评分";
+    scoreHeader.style.textAlign = "center";
+    scoreHeader.style.width = "80px"; // 限制列宽
+    tr.insertBefore(scoreHeader, headerCells[courseNameIndex + 1]);
+  }
 
   // 2. 处理 <tbody> 中的所有课程项
   let rows = tbody.querySelectorAll("tr");
@@ -95,6 +122,12 @@ async function addScoreAndEvaluateColumn(thead, tbody) {
     let cells = row.children;
 
     if (cells.length < courseNameIndex + 1) return; // 避免越界错误
+
+    // 如果已有class，则不再处理，避免重复添加评分单元格
+    if (row.classList.contains("course-item")) return;
+
+    // 给课程项添加 class
+    row.classList.add("course-item");
 
     // 提取课程信息对象
     let courseInfo = extractCourseInfo(

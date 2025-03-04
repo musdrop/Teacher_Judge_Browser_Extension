@@ -10,7 +10,16 @@ function CheckCoursesTable() {
   }
 
   const { thead, tbody } = tableEs;
-  addScoreAndEvaluateColumn(thead, tbody);
+  
+  addScoreAndEvaluateColumn(thead, tbody, false);
+
+  // 处理补选/重修界面搜索，翻页等操作只更新tbody内部节点而导致的不重载的问题
+  // 方法：监听tbody的变化，重新加载tbody
+  const debouncedTbodyObserverCallback = debounce(tbodyObserverCallback(thead, tbody), 500);
+  const tbodyObserver = new MutationObserver(debouncedTbodyObserverCallback);
+  tbodyObserver.observe(tbody, config)
+
+
   console.log("CheckCoursesTable_end");
 }
 
@@ -73,19 +82,25 @@ function debounce(func, wait) {
   };
 }
 
-// 观察者的回调函数
-const observerCallback = (mutationsList, observer) => {
-  CheckCoursesTable();
+// 页面观察者的回调函数
+const pageObserverCallback = (mutationsList, observer) => {
+    CheckCoursesTable();
+};
+
+// 表格观察者的回调函数
+const tbodyObserverCallback = (thead, tbody) => (mutationsList, observer) => {
+  addScoreAndEvaluateColumn(thead, tbody, true);
 };
 
 // 创建防抖后的回调函数，设置等待时间为 500 毫秒
-const debouncedObserverCallback = debounce(observerCallback, 500);
+const debouncedPageObserverCallback = debounce(pageObserverCallback, 500);
+
 
 // 创建 MutationObserver 实例并传入防抖后的回调函数
-const observer = new MutationObserver(debouncedObserverCallback);
+const pageObserver = new MutationObserver(debouncedPageObserverCallback);
 
 // 配置观察选项
 const config = { childList: true, subtree: true };
 
 // 开始观察目标节点
-observer.observe(document.body, config);
+pageObserver.observe(document.body, config);
