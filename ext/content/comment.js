@@ -1,12 +1,3 @@
-/*
- * courseInfo 对象包含以下属性：
- * 课程序号：lessonId
- * 课程代码：courseCode
- * 课程名称：courseName
- * 教师名称：teacherName
- * 课程评分：score
- */
-
 // 评论窗口
 function evaluateCourseWindow(courseInfo, handleInfoChange) {
   // 禁用页面滚动

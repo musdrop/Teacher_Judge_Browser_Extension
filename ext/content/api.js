@@ -23,7 +23,7 @@ const apiRequest = async (endpoint, method = "GET", body = null) => {
 };
 
 // 1. 获取课程评分
-const getLessonScore = async (lessonId) => await apiRequest(`/lesson/${lessonId}`);
+const getLessonScore = async (courseName, teacherName) => await apiRequest(`/course`, "POST", { courseName, teacherName });
 
 // 2. 点赞评论
 const likeComment = async (commentId) => await apiRequest(`/comment/${commentId}/like`, "POST");
@@ -32,7 +32,7 @@ const likeComment = async (commentId) => await apiRequest(`/comment/${commentId}
 const dislikeComment = async (commentId) => await apiRequest(`/comment/${commentId}/dislike`, "POST");
 
 // 4. 分页获取课程评论（每页5条）
-const getLessonComments = async (lessonId, page = 1) => await apiRequest(`/comments/${lessonId}/${page}`);
+const getLessonComments = async (courseId, page = 1) => await apiRequest(`/comments/${courseId}/${page}`);
 
 // 5. 发布课程评论
 const postComment = async (lessonInfo, commentContent, score) => await apiRequest(`/commentpost`, "POST", {

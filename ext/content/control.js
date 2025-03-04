@@ -35,6 +35,7 @@ function extractCourseInfo(
     课程名称: courseName,
     教师名称: teacherName,
     课程评分: null, // 评分字段暂时为空
+    课程ID: -1, // 课程ID暂时为空
   };
 }
 
@@ -44,7 +45,7 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
     console.error("thead 或 tbody 为空，无法继续执行");
     return;
   }
-  
+
   // 1. 在 <thead> 里找到 "课程名称" 所在列索引，并在其后插入 "评分" 列
   let tr = thead.querySelectorAll("tr");
   // 如果tr不止一个，使用第二个，处理全校开课查询界面特殊情况
@@ -59,7 +60,7 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
       const fcell = document.createElement("th");
       fcell.title = "课程评分";
       setStyles(fcell, {
-        width: "80px",
+        width: "120px",
         padding: "3px",
       });
       const fdiv = document.createElement("div");
@@ -111,7 +112,7 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
     let scoreHeader = document.createElement("th");
     scoreHeader.textContent = "评分";
     scoreHeader.style.textAlign = "center";
-    scoreHeader.style.width = "80px"; // 限制列宽
+    scoreHeader.style.width = "120px"; // 限制列宽
     tr.insertBefore(scoreHeader, headerCells[courseNameIndex + 1]);
   }
 
@@ -156,8 +157,9 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
     // 更新评分显示
     let updateScore = async () => {
       try {
-        let score = await getScore(courseInfo);
-        score = score === "N/A" ? "暂无评分" : parseFloat(score).toFixed(1);
+        let res = await getScore(courseInfo);
+        courseInfo.课程ID = res.courseId;
+        score = res.score === "N/A" ? "暂无评分" : parseFloat(res.score).toFixed(1);
         courseInfo.课程评分 = score;
         scoreSpan.textContent = score;
       } catch (error) {

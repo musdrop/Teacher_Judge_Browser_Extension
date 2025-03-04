@@ -28,10 +28,16 @@ export default {
 		}
 
 		try {
-			if (method === 'GET' && pathname.startsWith('/api/lesson/')) {
-				const lessonId = pathname.split('/').pop();
-				const lesson = await env.DB.prepare('SELECT score FROM lesson WHERE lessonId = ?').bind(lessonId).first();
-				return newResponse(lesson ? lesson.score : 'N/A');
+			if (method === 'POST' && pathname.startsWith('/api/course')) {
+				const body = await request.json();
+				const { courseName, teacherName } = body;
+				const course = await env.DB.prepare('SELECT * FROM course WHERE courseName = ? AND teacherName = ?').bind(courseName, teacherName).first();
+				if (course) {
+					return newResponse({ score: course.score, courseId: course.courseId });
+				}
+				else {
+					return newResponse({ score: "N/A", courseId: -1 });
+				}
 			}
 
 			if (method === 'POST' && pathname.startsWith('/api/comment/')) {
@@ -47,40 +53,41 @@ export default {
 			if (method === 'GET' && pathname.startsWith('/api/comments/')) {
 				const ts = pathname.split('/');
 				const page = ts.pop();
-				const lessonId = ts.pop();
-				console.log(lessonId);
+				const courseId = ts.pop();
+				console.log(courseId);
 				const offset = (parseInt(page) - 1) * 5;
-				const comments = await env.DB.prepare('SELECT * FROM comment WHERE lessonId = ? ORDER BY commentTime DESC LIMIT 5 OFFSET ?')
-					.bind(lessonId, offset)
+				const comments = await env.DB.prepare('SELECT * FROM comment WHERE courseId = ? ORDER BY commentTime DESC LIMIT 5 OFFSET ?')
+					.bind(courseId, offset)
 					.all();
 				return newResponse(comments.results || []);
 			}
 
 			if (method === 'POST' && pathname === '/api/commentpost') {
 				const body = await request.json();
-				const { lessonId, courseCode, courseName, teacherName, commentContent, score } = body;
+				const { courseId, courseName, teacherName, commentContent, score } = body;
 
-				let lesson = await env.DB.prepare('SELECT score, commentCount FROM lesson WHERE lessonId = ?').bind(lessonId).first();
-
-				if (lesson) {
+				let course = await env.DB.prepare(
+					'SELECT score, commentCount FROM course WHERE courseId = ?'
+				).bind(courseId).first();
+				let cId = courseId;
+				if (course) {
 					const newScore =
-						(parseFloat(lesson.commentCount) * parseFloat(lesson.score) + parseFloat(score)) / (parseFloat(lesson.commentCount) + 1);
-					await env.DB.prepare('UPDATE lesson SET score = ?, commentCount = commentCount + 1 WHERE lessonId = ?')
-						.bind(newScore, lessonId)
-						.run();
-				} else {
+						(parseFloat(course.commentCount) * parseFloat(course.score) + parseFloat(score)) /
+						(parseFloat(course.commentCount) + 1);
 					await env.DB.prepare(
-						'INSERT INTO lesson (lessonId, courseCode, courseName, teacherName, score, commentCount) VALUES (?, ?, ?, ?, ?, 1)'
-					)
-						.bind(lessonId, courseCode, courseName, teacherName, score)
-						.run();
+						'UPDATE course SET score = ?, commentCount = commentCount + 1 WHERE courseId = ?'
+					).bind(newScore, courseId).run();
+				} else {
+					const insertRes = await env.DB.prepare(
+						'INSERT INTO course (courseName, teacherName, score, commentCount) VALUES (?, ?, ?, 1)'
+					).bind(courseName, teacherName, score).run();
+					cId = insertRes.meta.last_row_id;
 				}
 
 				await env.DB.prepare(
-					"INSERT INTO comment (lessonId, commentContent,score ,commentTime, likes, dislikes) VALUES (?, ?, ? ,datetime('now','+8 hours'), 0, 0)"
-				)
-					.bind(lessonId, commentContent, score)
-					.run();
+					"INSERT INTO comment (courseId, commentContent, score, commentTime, likes, dislikes) VALUES (?, ?, ?, datetime('now','+8 hours'), 0, 0)"
+				).bind(cId, commentContent, score).run();
+
 				return newResponse('Comment added', true, { status: 201 });
 			}
 
