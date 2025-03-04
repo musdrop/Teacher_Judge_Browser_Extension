@@ -389,13 +389,6 @@ function createCommentElement(comment) {
   return commentBox;
 }
 
-// 设置样式的辅助函数
-function setStyles(element, styles) {
-  for (const property in styles) {
-    element.style[property] = styles[property];
-  }
-}
-
 // 显示或隐藏加载遮罩层
 function toggleOverlay(show) {
   const overlay = document.getElementById("loading");

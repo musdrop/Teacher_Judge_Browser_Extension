@@ -13,6 +13,7 @@
   "content_scripts": [
     {
       "js": [
+        "/content/tools.js",
         "/content/api.js",
         "/content/data.js",
         "/content/comment.js",

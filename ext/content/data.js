@@ -44,12 +44,12 @@ async function submitComment(
   toggleOverlay(false);
   if (result) {
     // 提交成功
-    alert("评论发布成功");
+    showToast("评论发布成功", "notice");
     // 处理评论发布成功
     handleCommentSubmitSuccess();
   } else {
     // 提交失败
-    alert("评论发布失败");
+    showToast("评论发布失败", "error");
   }
 }
 
