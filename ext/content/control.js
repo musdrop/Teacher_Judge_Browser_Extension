@@ -88,7 +88,6 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
     fbar.insertBefore(fcell, fcells[index]);
   };
 
-
   let headerCells = tr.children;
   let courseNameIndex = -1;
   let lessonIdIndex = -1;
@@ -126,7 +125,21 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
   // 2. 处理 <tbody> 中的所有课程项
   let rows = tbody.querySelectorAll("tr");
 
-  rows.forEach(async (row) => {
+  // 提取所有课程信息
+  let courseInfos = Array.from(rows).map((row) => {
+    let cells = row.children;
+    return extractCourseInfo(
+      cells,
+      lessonIdIndex,
+      courseNameIndex,
+      teacherNameIndex
+    );
+  });
+
+  // 批量获取评分
+  let scores = await getScores(courseInfos);
+
+  rows.forEach((row, index) => {
     let cells = row.children;
 
     if (cells.length < courseNameIndex + 1) return; // 避免越界错误
@@ -137,21 +150,21 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
     // 给课程项添加 class
     row.classList.add("course-item");
 
-    // 提取课程信息对象
-    let courseInfo = extractCourseInfo(
-      cells,
-      lessonIdIndex,
-      courseNameIndex,
-      teacherNameIndex
-    );
+    // 获取对应的课程信息和评分
+    let courseInfo = courseInfos[index];
+    let scoreData = scores[index];
 
-    // 创建评分单元格（异步填充评分）
+    // 创建评分单元格
     let scoreCell = document.createElement("td");
     scoreCell.style.textAlign = "center";
 
-    // 先填充“加载中...”提示
+    // 填充评分
     let scoreSpan = document.createElement("span");
-    scoreSpan.textContent = "加载中...";
+    let score =
+      scoreData.score === "N/A"
+        ? "暂无评分"
+        : parseFloat(scoreData.score).toFixed(1);
+    scoreSpan.textContent = score;
     scoreCell.appendChild(scoreSpan);
 
     // 创建评价按钮
@@ -161,12 +174,13 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
     evaluateButton.className = "lessonListOperator"; // 使样式与补选/重修按钮一致
     evaluateButton.style.marginLeft = "10px"; // 评分和按钮之间的间隙
 
-    // 更新评分显示
-    let updateScore = async () => {
+    // 评论信息变更处理函数，目前仅处理评论窗口内用户发布评论后导致的评分变动
+    const handleInfoChange = async () => {
       try {
         let res = await getScore(courseInfo);
         courseInfo.课程ID = res.courseId;
-        score = res.score === "N/A" ? "暂无评分" : parseFloat(res.score).toFixed(1);
+        score =
+          res.score === "N/A" ? "暂无评分" : parseFloat(res.score).toFixed(1);
         courseInfo.课程评分 = score;
         scoreSpan.textContent = score;
       } catch (error) {
@@ -174,18 +188,10 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
         scoreSpan.textContent = "获取失败";
       }
     };
-
-    // 评论信息变更处理函数，目前仅处理评论窗口内用户发布评论后导致的评分变动
-    const handleInfoChange = async () => {
-      await updateScore();
-    };
     evaluateButton.onclick = () =>
       evaluateCourseWindow(courseInfo, handleInfoChange); // 绑定函数
 
     scoreCell.appendChild(evaluateButton);
     row.insertBefore(scoreCell, cells[courseNameIndex + 1]); // 插入到课程名称之后
-
-    // 异步获取评分并更新显示
-    updateScore();
   });
 }
