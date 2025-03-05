@@ -18,7 +18,6 @@ const apiRequest = async (endpoint, method = "GET", body = null) => {
     return data.result;
   } catch (error) {
     console.error(`API Error (${endpoint}):`, error.message);
-    showToast(`API 请求错误: ${error.message}`, "error");
     return null;
   }
 };

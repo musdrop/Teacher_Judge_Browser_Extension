@@ -92,6 +92,7 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
   let courseNameIndex = -1;
   let lessonIdIndex = -1;
   let teacherNameIndex = -1;
+  let scoreInedx = 100;
 
   for (let i = 0; i < headerCells.length; i++) {
     const textContent = headerCells[i].textContent.trim();
@@ -101,8 +102,14 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
       teacherNameIndex = i;
     } else if (textContent === "课程名称") {
       courseNameIndex = i;
+    } else if (textContent === "评分") {
+      scoreInedx = i;
     }
   }
+  // 修正索引
+  lessonIdIndex = lessonIdIndex <= scoreInedx ? lessonIdIndex : lessonIdIndex - 1;
+  teacherNameIndex = teacherNameIndex <= scoreInedx ? teacherNameIndex : teacherNameIndex - 1;
+  courseNameIndex = courseNameIndex <= scoreInedx ? courseNameIndex : courseNameIndex - 1;
 
   if (courseNameIndex === -1) {
     console.error("未找到 '课程名称' 列");
