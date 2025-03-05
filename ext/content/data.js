@@ -1,3 +1,10 @@
+async function getScores(courseInfos) {
+  const courseNames = courseInfos.map((info) => info.课程名称);
+  const teacherNames = courseInfos.map((info) => info.教师名称);
+  let results = await getLessonScores(courseNames, teacherNames);
+  return results;
+}
+
 async function getScore(courseInfo) {
   let result = await getLessonScore(courseInfo.课程名称, courseInfo.教师名称);
   return result;
