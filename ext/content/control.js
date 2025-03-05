@@ -128,14 +128,6 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
   // 插入评分单元格方法
   const insertEvaluateColumn = (row, cells, courseInfo) => {
 
-    if (cells.length < courseNameIndex + 1) return; // 避免越界错误
-
-    // 如果已有class，则不再处理，避免重复添加评分单元格
-    if (row.classList.contains("course-item")) return;
-
-    // 给课程项添加 class
-    row.classList.add("course-item");
-
     // 创建评分单元格
     let scoreCell = document.createElement("td");
     scoreCell.style.textAlign = "center";
@@ -179,15 +171,32 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
   // 提取所有课程信息并插入评分单元格
   let scoreSpans_courseInfos = Array.from(rows).map((row) => {
     let cells = row.children;
+    if (cells.length < courseNameIndex + 1) return; // 避免越界错误
+
+    // 如果已有class，则不再处理，避免重复添加评分单元格
+    if (row.classList.contains("course-item")) return;
+
+    // 给课程项添加 class
+    row.classList.add("course-item");
+
+    // 提取课程信息
     let courseInfo = extractCourseInfo(
       cells,
       lessonIdIndex,
       courseNameIndex,
       teacherNameIndex
     );
+
+    // 插入评分单元格
     let scoreSpan = insertEvaluateColumn(row, cells, courseInfo);
     return { scoreSpan, courseInfo };
   });
+
+  // 如果没有获取到相关信息直接返回
+  if (!scoreSpans_courseInfos || scoreSpans_courseInfos[0] === undefined) {
+    return;
+  }
+
   // 分离评分span和课程信息
   let scoreSpans = scoreSpans_courseInfos.map((item) => item.scoreSpan);
   let courseInfos = scoreSpans_courseInfos.map((item) => item.courseInfo);
