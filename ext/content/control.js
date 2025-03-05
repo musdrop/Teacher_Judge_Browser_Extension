@@ -125,22 +125,8 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
   // 2. 处理 <tbody> 中的所有课程项
   let rows = tbody.querySelectorAll("tr");
 
-  // 提取所有课程信息
-  let courseInfos = Array.from(rows).map((row) => {
-    let cells = row.children;
-    return extractCourseInfo(
-      cells,
-      lessonIdIndex,
-      courseNameIndex,
-      teacherNameIndex
-    );
-  });
-
-  // 批量获取评分
-  let scores = await getScores(courseInfos);
-
-  rows.forEach((row, index) => {
-    let cells = row.children;
+  // 插入评分单元格方法
+  const insertEvaluateColumn = (row, cells, courseInfo) => {
 
     if (cells.length < courseNameIndex + 1) return; // 避免越界错误
 
@@ -150,21 +136,13 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
     // 给课程项添加 class
     row.classList.add("course-item");
 
-    // 获取对应的课程信息和评分
-    let courseInfo = courseInfos[index];
-    let scoreData = scores[index];
-
     // 创建评分单元格
     let scoreCell = document.createElement("td");
     scoreCell.style.textAlign = "center";
 
     // 填充评分
     let scoreSpan = document.createElement("span");
-    let score =
-      scoreData.score === "N/A"
-        ? "暂无评分"
-        : parseFloat(scoreData.score).toFixed(1);
-    scoreSpan.textContent = score;
+    scoreSpan.textContent = "加载中";
     scoreCell.appendChild(scoreSpan);
 
     // 创建评价按钮
@@ -193,5 +171,38 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
 
     scoreCell.appendChild(evaluateButton);
     row.insertBefore(scoreCell, cells[courseNameIndex + 1]); // 插入到课程名称之后
+
+    // 用于后续填入评分
+    return scoreSpan;
+  };
+
+  // 提取所有课程信息并插入评分单元格
+  let scoreSpans_courseInfos = Array.from(rows).map((row) => {
+    let cells = row.children;
+    let courseInfo = extractCourseInfo(
+      cells,
+      lessonIdIndex,
+      courseNameIndex,
+      teacherNameIndex
+    );
+    let scoreSpan = insertEvaluateColumn(row, cells, courseInfo);
+    return { scoreSpan, courseInfo };
   });
+  // 分离评分span和课程信息
+  let scoreSpans = scoreSpans_courseInfos.map((item) => item.scoreSpan);
+  let courseInfos = scoreSpans_courseInfos.map((item) => item.courseInfo);
+
+
+  // 批量获取评分
+  let scores = await getScores(courseInfos);
+
+  // 填充评分
+  for (let i = 0; i < scoreSpans.length; i++) {
+    courseInfos[i].课程ID = scores[i].courseId;
+    score =
+      scores[i].score === "N/A" ? "暂无评分" : parseFloat(scores[i].score).toFixed(1);
+    courseInfos[i].课程评分 = score;
+    scoreSpans[i].textContent = score;
+  }
+
 }
