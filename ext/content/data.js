@@ -45,7 +45,7 @@ async function submitComment(
   // 显示加载视图
   toggleLoadingOverlay(true);
   //返回本次评论的id
-  let result = await postComment(lessonInfo, content, rating);
+  let result = await postComment(lessonInfo, content, rating, "uuid");
   // 隐藏加载视图
   toggleLoadingOverlay(false);
   if (result) {
@@ -80,5 +80,7 @@ async function fetchCommentsFromServer(courseInfo, page) {
     likes: comment.likes,
     dislikes: comment.dislikes,
     commentId: comment.commentId,
+    visible: comment.visible,
+    uuid: comment.uuid,
   }));
 }

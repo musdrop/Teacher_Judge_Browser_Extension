@@ -309,6 +309,7 @@ function createCommentElement(comment) {
   setStyles(commentBox, {
     padding: "10px",
     borderBottom: "1px solid #ddd",
+    position: "relative", // 为角标预留位置
   });
 
   const userInfo = document.createElement("p");
@@ -376,6 +377,34 @@ function createCommentElement(comment) {
     dislikeButton.textContent = `👎 ${++comment.dislikes}`;
   };
 
+  // 添加角标
+  const badge = document.createElement("span");
+  setStyles(badge, {
+    position: "absolute",
+    top: "10px",
+    right: "10px",
+    padding: "5px 10px",
+    borderRadius: "5px",
+    color: "#fff",
+    display: "none", // 默认隐藏
+  });
+
+  // 根据条件显示不同的角标
+  if (comment.visible === "pending") {
+    badge.textContent = "审核中";
+    setStyles(badge, {
+      backgroundColor: "#2196F3", // 蓝色风格
+      display: "inline-block",
+    });
+  } else if (comment.visible === "rejected") {
+    badge.textContent = "审核未通过";
+    setStyles(badge, {
+      backgroundColor: "#f44336", // 红色风格
+      display: "inline-block",
+    });
+  }
+
+  commentBox.appendChild(badge);
   likeDislike.appendChild(likeButton);
   likeDislike.appendChild(dislikeButton);
 

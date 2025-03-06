@@ -43,9 +43,10 @@ const getLessonComments = async (courseId, page = 1) =>
   await apiRequest(`/comments/${courseId}/${page}`);
 
 // 5. 发布课程评论
-const postComment = async (lessonInfo, commentContent, score) =>
+const postComment = async (lessonInfo, commentContent, score, uuid) =>
   await apiRequest(`/commentpost`, "POST", {
     ...lessonInfo,
     commentContent,
     score,
+    uuid
   });
