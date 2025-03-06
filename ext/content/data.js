@@ -44,8 +44,10 @@ async function submitComment(
   };
   // 显示加载视图
   toggleLoadingOverlay(true);
+  //获取uuid
+  const uuid = await getUUID();
   //返回本次评论的id
-  let result = await postComment(lessonInfo, content, rating, getUUID());
+  let result = await postComment(lessonInfo, content, rating, uuid);
   // 隐藏加载视图
   toggleLoadingOverlay(false);
   if (result) {
@@ -61,11 +63,12 @@ async function submitComment(
 
 // 获取评论
 async function fetchCommentsFromServer(courseInfo, page) {
-  let comments = await getLessonComments(courseInfo.课程ID, page, getUUID());
+  const l_uuid = await getUUID();
+  let comments = await getLessonComments(courseInfo.课程ID, page, l_uuid);
   // 转换评论格式，以便于展示
   return comments.map((comment) => {
     let user = "NUAAer" + comment.commentId;
-    if (comment.uuid === getUUID()) {
+    if (comment.uuid === l_uuid) {
       user = "我";
     }
     return {

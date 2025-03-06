@@ -64,17 +64,19 @@ function newUUID() {
     });
 }
 
-function getUUID(callback) {
-    // 先判断本地是否有 UUID
-    chrome.storage.local.get(['tj_uuid'], (result) => {
-        let uuid = result.tj_uuid;
-        if (!uuid) {
-            // 生成一个 UUID
-            uuid = newUUID();
-            // 保存到本地
-            saveUUID(uuid);
-        }
-        callback(uuid);
+// 获取 UUID
+function getUUID() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get(['tj_uuid'], (result) => {
+            let uuid = result.tj_uuid;
+            if (!uuid) {
+                // 生成一个 UUID
+                uuid = newUUID();
+                // 保存到本地
+                saveUUID(uuid);
+            }
+            resolve(uuid);
+        });
     });
 }
 
