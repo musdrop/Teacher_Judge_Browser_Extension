@@ -10,7 +10,9 @@
   ],
   "action": {
     "default_popup": "./popup/popup.html",
-    "default_icon": "hello_extensions.png"
+    "default_icon": {
+      "128": "./assets/NTJ128.png"
+    }
   },
   "content_scripts": [
     {
@@ -25,14 +27,12 @@
       "matches": [
         "*://aao-eas.nuaa.edu.cn/eams/*"
       ]
-    },
-    {
-      "js": [
-        "/content/tools.js"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
     }
-  ]
+  ],
+  "icons": {
+    "16": "./assets/NTJ16.png",
+    "32": "./assets/NTJ32.png",
+    "48": "./assets/NTJ48.png",
+    "128": "./assets/NTJ128.png"
+  }
 }
