@@ -23,6 +23,14 @@
       "matches": [
         "*://aao-eas.nuaa.edu.cn/eams/*"
       ]
+    },
+    {
+      "js": [
+        "/content/tools.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }

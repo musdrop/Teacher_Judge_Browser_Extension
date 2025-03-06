@@ -63,15 +63,21 @@ async function submitComment(
 async function fetchCommentsFromServer(courseInfo, page) {
   let comments = await getLessonComments(courseInfo.课程ID, page, getUUID());
   // 转换评论格式，以便于展示
-  return comments.map((comment) => ({
-    user: "NUAAer" + comment.commentId,
-    content: comment.commentContent,
-    rating: comment.score,
-    time: comment.commentTime,
-    likes: comment.likes,
-    dislikes: comment.dislikes,
-    commentId: comment.commentId,
-    visible: comment.visible,
-    uuid: comment.uuid,
-  }));
+  return comments.map((comment) => {
+    let user = "NUAAer" + comment.commentId;
+    if (comment.uuid === getUUID()) {
+      user = "我";
+    }
+    return {
+      user: user,
+      content: comment.commentContent,
+      rating: comment.score,
+      time: comment.commentTime,
+      likes: comment.likes,
+      dislikes: comment.dislikes,
+      commentId: comment.commentId,
+      visible: comment.visible,
+      uuid: comment.uuid,
+    };
+  });
 }

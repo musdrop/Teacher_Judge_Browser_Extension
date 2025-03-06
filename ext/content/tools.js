@@ -1,8 +1,8 @@
 // 设置样式的辅助函数
 function setStyles(element, styles) {
-  for (const property in styles) {
-    element.style[property] = styles[property];
-  }
+    for (const property in styles) {
+        element.style[property] = styles[property];
+    }
 }
 
 
@@ -25,7 +25,7 @@ function showToast(message, type) {
         opacity: '0.95',
         zIndex: '9999',
     });
-    
+
     // 根据类型设置样式
     if (type === 'error') {
         toast.style.backgroundColor = '#ff4d4f'; // 红色背景
@@ -37,14 +37,14 @@ function showToast(message, type) {
         toast.style.backgroundColor = '#555'; // 默认灰色背景
         toast.style.color = '#fff';
     }
-    
+
     document.body.appendChild(toast);
-    
+
     // 触发动画，使其滑入可见区域
     setTimeout(() => {
         toast.style.top = '20px';
     }, 10);
-    
+
     // 2秒后自动消失
     setTimeout(() => {
         toast.style.top = '-50px';
@@ -55,18 +55,40 @@ function showToast(message, type) {
     }, 2000);
 }
 
+// 生成新的 UUID
+function newUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = (Math.random() * 16) | 0,
+            v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    });
+}
+
 function getUUID() {
     // 先判断本地是否有 UUID
     let uuid = localStorage.getItem('tj_uuid');
     if (!uuid) {
         // 生成一个 UUID
-        uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            const r = (Math.random() * 16) | 0,
-                v = c === 'x' ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-        });
+        uuid = newUUID();
         // 保存到本地
         localStorage.setItem('tj_uuid', uuid);
     }
     return uuid;
 }
+
+function updateUUID() {
+    let newUUID = newUUID();
+    localStorage.setItem('tj_uuid', newUUID);
+    return newUUID;
+}
+
+// 监听来自 popup.js 的请求
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "getUUID") {
+        sendResponse({ value: getUUID() });
+    }
+    if (message.action === "updateUUID") {
+        sendResponse({ value: updateUUID() });
+    }
+    return true; // 表示异步响应
+});
