@@ -90,6 +90,16 @@ const handleCommentPost = async (request) => {
 	const body = await request.json();
 	const { courseId, courseName, teacherName, commentContent, score, uuid } = body;
 
+	// 参数校验
+	if (!courseId || !courseName || !teacherName || !commentContent || !score || !uuid) {
+		return newResponse('Invalid parameters', false, { status: 400 });
+	}
+	// 评分校验
+	if (isNaN(score) || score < 0 || score > 5) {
+		return newResponse('Invalid score', false, { status: 400 });
+	}
+
+
 	let course = await preparedStatements.courseScoreSelect.bind(courseId).first();
 	let cId = courseId;
 	if (course) {
