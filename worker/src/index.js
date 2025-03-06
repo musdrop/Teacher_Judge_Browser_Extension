@@ -25,7 +25,7 @@ const prepareStatements = (env) => {
 		preparedStatements.commentLikesUpdate = env.DB.prepare('UPDATE comment SET likes = likes + 1 WHERE commentId = ?');
 		preparedStatements.commentDislikesUpdate = env.DB.prepare('UPDATE comment SET dislikes = dislikes + 1 WHERE commentId = ?');
 		preparedStatements.commentsSelect = env.DB.prepare(
-			'SELECT * FROM comment WHERE courseId = ? ORDER BY commentTime DESC LIMIT 5 OFFSET ?'
+			'SELECT * FROM comment WHERE courseId = ? AND (visible = "accepted" OR (visible != "accepted" AND uuid = ?)) ORDER BY commentTime DESC LIMIT 5 OFFSET ?'
 		);
 		preparedStatements.courseScoreSelect = env.DB.prepare('SELECT score, commentCount FROM course WHERE courseId = ?');
 		preparedStatements.courseUpdate = env.DB.prepare('UPDATE course SET score = ?, commentCount = commentCount + 1 WHERE courseId = ?');
@@ -78,10 +78,11 @@ const handleCommentUpdate = async (pathname) => {
 
 const handleCommentsSelect = async (pathname) => {
 	const ts = pathname.split('/');
+	const uuid = ts.pop();
 	const page = ts.pop();
 	const courseId = ts.pop();
 	const offset = (parseInt(page) - 1) * 5;
-	const comments = await preparedStatements.commentsSelect.bind(courseId, offset).all();
+	const comments = await preparedStatements.commentsSelect.bind(courseId, uuid, offset).all();
 	return newResponse(comments.results || []);
 };
 

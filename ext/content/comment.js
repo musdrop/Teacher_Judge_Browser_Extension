@@ -396,7 +396,7 @@ function createCommentElement(comment) {
       backgroundColor: "#2196F3", // 蓝色风格
       display: "inline-block",
     });
-  } else if (comment.visible === "rejected") {
+  } else if (comment.visible === "refused") {
     badge.textContent = "审核未通过";
     setStyles(badge, {
       backgroundColor: "#f44336", // 红色风格

@@ -54,3 +54,19 @@ function showToast(message, type) {
         }, 500);
     }, 2000);
 }
+
+function getUUID() {
+    // 先判断本地是否有 UUID
+    let uuid = localStorage.getItem('tj_uuid');
+    if (!uuid) {
+        // 生成一个 UUID
+        uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = (Math.random() * 16) | 0,
+                v = c === 'x' ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+        });
+        // 保存到本地
+        localStorage.setItem('tj_uuid', uuid);
+    }
+    return uuid;
+}
