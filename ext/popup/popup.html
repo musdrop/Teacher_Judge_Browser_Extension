@@ -10,7 +10,7 @@
       margin: 0;
       padding: 20px;
       background-color: #f4f4f4;
-      width: 300px;
+      width: 450px;
     }
 
     h1 {
@@ -28,14 +28,33 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       font-size: 14px;
       color: #555;
+      display: flex;
+      justify-content: space-between;
+      /* 让子元素两端对齐 */
+      align-items: center;
+      /* 垂直居中对齐 */
+    }
+
+    #uuid {
+      font-weight: bold;
+    }
+
+
+    #update {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      width: 60px;
+      height: 30px;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
   <h1>NUAA教师评价助手</h1>
-  <div class="info">身份ID: <span id="uuid">暂无</span></div>
-  <div class="info"><button id="update">点击刷新ID</button><button id="test">测试</button></div>
+  <div class="info"><span>身份ID:<span id="uuid">暂无</span></span> <button id="update">刷新</button></div>
   <script src="popup.js"></script>
 </body>
 

@@ -64,31 +64,26 @@ function newUUID() {
     });
 }
 
-function getUUID() {
+function getUUID(callback) {
     // 先判断本地是否有 UUID
-    let uuid = localStorage.getItem('tj_uuid');
-    if (!uuid) {
-        // 生成一个 UUID
-        uuid = newUUID();
-        // 保存到本地
-        localStorage.setItem('tj_uuid', uuid);
-    }
-    return uuid;
+    chrome.storage.local.get(['tj_uuid'], (result) => {
+        let uuid = result.tj_uuid;
+        if (!uuid) {
+            // 生成一个 UUID
+            uuid = newUUID();
+            // 保存到本地
+            saveUUID(uuid);
+        }
+        callback(uuid);
+    });
+}
+
+function saveUUID(uuid) {
+    chrome.storage.local.set({ tj_uuid: uuid });
 }
 
 function updateUUID() {
-    let newUUID = newUUID();
-    localStorage.setItem('tj_uuid', newUUID);
-    return newUUID;
+    let newID = newUUID();
+    saveUUID(newID);
+    return newID;
 }
-
-// 监听来自 popup.js 的请求
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === "getUUID") {
-        sendResponse({ value: getUUID() });
-    }
-    if (message.action === "updateUUID") {
-        sendResponse({ value: updateUUID() });
-    }
-    return true; // 表示异步响应
-});
