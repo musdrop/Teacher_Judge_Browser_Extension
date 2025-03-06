@@ -141,6 +141,13 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
 
     // 填充评分
     let scoreSpan = document.createElement("span");
+    // 如果没有找到教师名称，说明是未中选课程界面
+    if (courseInfo.教师名称 === "未知") {
+      scoreSpan.textContent = "不支持该页面";
+      scoreCell.appendChild(scoreSpan);
+      row.insertBefore(scoreCell, cells[courseNameIndex + 1]);
+      return;
+    }
     scoreSpan.textContent = "加载中";
     scoreCell.appendChild(scoreSpan);
 
