@@ -22,13 +22,13 @@ let preparedStatements = {};
 const prepareStatements = (env) => {
 	if (!preparedStatements.courseSelect) {
 		preparedStatements.courseSelect = env.DB.prepare('SELECT * FROM course WHERE courseName = ? AND teacherName = ?');
-		preparedStatements.commentLikesUpdate = env.DB.prepare('UPDATE comment SET likes = likes + 1 WHERE commentId = ?');
-		preparedStatements.commentDislikesUpdate = env.DB.prepare('UPDATE comment SET dislikes = dislikes + 1 WHERE commentId = ?');
+		preparedStatements.commentLikesAdd = env.DB.prepare('UPDATE comment SET likes = likes + 1 WHERE commentId = ?');
+		preparedStatements.commentDislikesAdd = env.DB.prepare('UPDATE comment SET dislikes = dislikes + 1 WHERE commentId = ?');
 		preparedStatements.commentsSelect = env.DB.prepare(
 			'SELECT * FROM comment WHERE courseId = ? AND (visible = "accepted" OR (visible != "accepted" AND uuid = ?)) ORDER BY commentTime DESC LIMIT 5 OFFSET ?'
 		);
 		preparedStatements.courseScoreSelect = env.DB.prepare('SELECT score, commentCount FROM course WHERE courseId = ?');
-		preparedStatements.courseUpdate = env.DB.prepare('UPDATE course SET score = ?, commentCount = commentCount + 1 WHERE courseId = ?');
+		preparedStatements.courseScoreUpdate = env.DB.prepare('UPDATE course SET score = ?, commentCount = commentCount + 1 WHERE courseId = ?');
 		preparedStatements.courseInsert = env.DB.prepare(
 			'INSERT INTO course (courseName, teacherName, score, commentCount) VALUES (?, ?, ?, 1)'
 		);
@@ -71,7 +71,7 @@ const handleCommentUpdate = async (pathname) => {
 	ts.pop();
 	const commentId = ts.pop();
 	const isDisLike = pathname.includes('dislike');
-	const statement = isDisLike ? preparedStatements.commentDislikesUpdate : preparedStatements.commentLikesUpdate;
+	const statement = isDisLike ? preparedStatements.commentDislikesAdd : preparedStatements.commentLikesAdd;
 	await statement.bind(commentId).run();
 	return newResponse('Success');
 };
@@ -95,7 +95,7 @@ const handleCommentPost = async (request) => {
 	if (course) {
 		const newScore =
 			(parseFloat(course.commentCount) * parseFloat(course.score) + parseFloat(score)) / (parseFloat(course.commentCount) + 1);
-		await preparedStatements.courseUpdate.bind(newScore, courseId).run();
+		await preparedStatements.courseScoreUpdate.bind(newScore, courseId).run();
 	} else {
 		const insertRes = await preparedStatements.courseInsert.bind(courseName, teacherName, score).run();
 		cId = insertRes.meta.last_row_id;
