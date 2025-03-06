@@ -35,7 +35,7 @@ const prepareStatements = (env) => {
 		preparedStatements.commentInsert = env.DB.prepare(
 			"INSERT INTO comment (courseId, commentContent, score, commentTime, likes, dislikes, visible, uuid) VALUES (?, ?, ?, datetime('now','+8 hours'), 0, 0, ?, ?)"
 		);
-		prepareStatements.commentsSelectBylikes = env.DB.prepare(
+		preparedStatements.commentsSelectBylikes = env.DB.prepare(
 			'SELECT * FROM comment WHERE courseId = ? AND (visible = "accepted" OR (visible != "accepted" AND uuid = ?)) ORDER BY likes DESC LIMIT 5 OFFSET ?'
 		);
 	}
@@ -148,10 +148,6 @@ export default {
 
 			if (method === 'GET' && pathname.startsWith('/api/comments/')) {
 				return await handleCommentsSelect(pathname);
-			}
-
-			if (method === 'GET' && pathname.startsWith('/api/comments/likes/')) {
-				return newResponse('OK');
 			}
 
 			if (method === 'POST' && pathname === '/api/commentpost') {
