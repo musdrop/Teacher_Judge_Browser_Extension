@@ -22,8 +22,8 @@ let preparedStatements = {};
 const prepareStatements = (env) => {
 	if (!preparedStatements.courseSelect) {
 		preparedStatements.courseSelect = env.DB.prepare('SELECT * FROM course WHERE courseName = ? AND teacherName = ?');
-		preparedStatements.commentUpdate = env.DB.prepare('UPDATE comment SET likes = likes + 1 WHERE commentId = ?');
-		preparedStatements.commentDislikeUpdate = env.DB.prepare('UPDATE comment SET dislikes = dislikes + 1 WHERE commentId = ?');
+		preparedStatements.commentLikesUpdate = env.DB.prepare('UPDATE comment SET likes = likes + 1 WHERE commentId = ?');
+		preparedStatements.commentDislikesUpdate = env.DB.prepare('UPDATE comment SET dislikes = dislikes + 1 WHERE commentId = ?');
 		preparedStatements.commentsSelect = env.DB.prepare(
 			'SELECT * FROM comment WHERE courseId = ? ORDER BY commentTime DESC LIMIT 5 OFFSET ?'
 		);
@@ -71,7 +71,7 @@ const handleCommentUpdate = async (pathname) => {
 	ts.pop();
 	const commentId = ts.pop();
 	const isDisLike = pathname.includes('dislike');
-	const statement = isDisLike ? preparedStatements.commentDislikeUpdate : preparedStatements.commentUpdate;
+	const statement = isDisLike ? preparedStatements.commentDislikesUpdate : preparedStatements.commentLikesUpdate;
 	await statement.bind(commentId).run();
 	return newResponse('Success');
 };

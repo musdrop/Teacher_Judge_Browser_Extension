@@ -57,3 +57,5 @@
 - 评论时间：`commentTime`
 - 点赞数：`likes`
 - 点踩数：`dislikes`
+- 可见性: `visible`
+- 用户id: `uuid`
