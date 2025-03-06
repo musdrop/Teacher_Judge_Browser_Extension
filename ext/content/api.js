@@ -38,9 +38,13 @@ const likeComment = async (commentId) =>
 const dislikeComment = async (commentId) =>
   await apiRequest(`/comment/${commentId}/dislike`, "POST");
 
-// 4. 分页获取课程评论（每页5条）
+// 4. 按时间排序分页获取课程评论（每页5条）
 const getLessonComments = async (courseId, page = 1, uuid) =>
   await apiRequest(`/comments/${courseId}/${page}/${uuid}`);
+
+// 新增：按点赞数排序获取课程评论（每页5条）
+const getLessonCommentsByLikes = async (courseId, page = 1, uuid) =>
+  await apiRequest(`/comments/likes/${courseId}/${page}/${uuid}`);
 
 // 5. 发布课程评论
 const postComment = async (lessonInfo, commentContent, score, uuid) =>

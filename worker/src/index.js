@@ -35,6 +35,9 @@ const prepareStatements = (env) => {
 		preparedStatements.commentInsert = env.DB.prepare(
 			"INSERT INTO comment (courseId, commentContent, score, commentTime, likes, dislikes, visible, uuid) VALUES (?, ?, ?, datetime('now','+8 hours'), 0, 0, ?, ?)"
 		);
+		prepareStatements.commentsSelectBylikes = env.DB.prepare(
+			'SELECT * FROM comment WHERE courseId = ? AND (visible = "accepted" OR (visible != "accepted" AND uuid = ?)) ORDER BY likes DESC LIMIT 5 OFFSET ?'
+		);
 	}
 };
 
@@ -82,7 +85,13 @@ const handleCommentsSelect = async (pathname) => {
 	const page = ts.pop();
 	const courseId = ts.pop();
 	const offset = (parseInt(page) - 1) * 5;
-	const comments = await preparedStatements.commentsSelect.bind(courseId, uuid, offset).all();
+	let comments;
+	if (pathname.includes('likes')) {
+		comments = await preparedStatements.commentsSelectBylikes.bind(courseId, uuid, offset).all();
+	}
+	else {
+		comments = await preparedStatements.commentsSelect.bind(courseId, uuid, offset).all();
+	}
 	return newResponse(comments.results || []);
 };
 
@@ -139,6 +148,10 @@ export default {
 
 			if (method === 'GET' && pathname.startsWith('/api/comments/')) {
 				return await handleCommentsSelect(pathname);
+			}
+
+			if (method === 'GET' && pathname.startsWith('/api/likes/comments/')) {
+				return newResponse('OK');
 			}
 
 			if (method === 'POST' && pathname === '/api/commentpost') {

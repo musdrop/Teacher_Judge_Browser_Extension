@@ -1,3 +1,9 @@
+// 配置评论排序方式
+if (!localStorage.getItem('tj_orderBy')) {
+    localStorage.setItem('tj_orderBy', 'time')
+}
+
+
 // 设置样式的辅助函数
 function setStyles(element, styles) {
     for (const property in styles) {

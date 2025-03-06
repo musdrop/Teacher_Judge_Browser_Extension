@@ -64,7 +64,16 @@ async function submitComment(
 // 获取评论
 async function fetchCommentsFromServer(courseInfo, page) {
   const l_uuid = await getUUID();
-  let comments = await getLessonComments(courseInfo.课程ID, page, l_uuid);
+  let comments;
+  if (localStorage.getItem("tj_orderBy") === "likes") {
+    comments = await getLessonCommentsOrderByLikes(
+      courseInfo.课程ID,
+      page,
+      l_uuid
+    );
+  } else {
+    comments = await getLessonComments(courseInfo.课程ID, page, l_uuid);
+  }
   // 转换评论格式，以便于展示
   return comments.map((comment) => {
     let user = "NUAAer" + comment.commentId;

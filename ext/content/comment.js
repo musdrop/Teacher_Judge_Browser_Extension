@@ -115,6 +115,60 @@ function evaluateCourseWindow(courseInfo, handleInfoChange) {
     position: "relative",
   });
 
+  // 添加排序控件
+  const sortContainer = document.createElement("div");
+  setStyles(sortContainer, {
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: "10px",
+  });
+
+  const sortByTimeButton = document.createElement("button");
+  sortByTimeButton.textContent = "按时间排序";
+  setStyles(sortByTimeButton, {
+    padding: "10px 20px",
+    margin: "0 5px",
+    cursor: "pointer",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+  });
+
+  const sortByLikesButton = document.createElement("button");
+  sortByLikesButton.textContent = "按点赞数排序";
+  setStyles(sortByLikesButton, {
+    padding: "10px 20px",
+    margin: "0 5px",
+    cursor: "pointer",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+  });
+  if (localStorage.getItem("tj_orderBy") === "likes") {
+    setStyles(sortByLikesButton, { backgroundColor: "#4CAF50" }); // 绿
+    setStyles(sortByTimeButton, { backgroundColor: "#f44336" }); // 红
+  }
+  else {
+    setStyles(sortByTimeButton, { backgroundColor: "#4CAF50" }); // 绿
+    setStyles(sortByLikesButton, { backgroundColor: "#f44336" }); // 红
+  }
+
+  sortByTimeButton.onclick = () => {
+    localStorage.setItem("tj_orderBy", "time");
+    closeButton.click();
+    evaluateCourseWindow(courseInfo, handleInfoChange);
+  };
+
+  sortByLikesButton.onclick = () => {
+    localStorage.setItem("tj_orderBy", "likes");
+    closeButton.click();
+    evaluateCourseWindow(courseInfo, handleInfoChange);
+  };
+
+  sortContainer.appendChild(sortByTimeButton);
+  sortContainer.appendChild(sortByLikesButton);
+  commentsContainer.appendChild(sortContainer);
+
   const loadingIndicator = document.createElement("div");
   loadingIndicator.textContent = "加载中...";
   setStyles(loadingIndicator, {
