@@ -150,7 +150,7 @@ export default {
 				return await handleCommentsSelect(pathname);
 			}
 
-			if (method === 'GET' && pathname.startsWith('/api/likes/comments/')) {
+			if (method === 'GET' && pathname.startsWith('/api/comments/likes/')) {
 				return newResponse('OK');
 			}
 

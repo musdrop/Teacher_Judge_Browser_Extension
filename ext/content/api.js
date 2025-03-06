@@ -43,7 +43,7 @@ const getLessonComments = async (courseId, page = 1, uuid) =>
   await apiRequest(`/comments/${courseId}/${page}/${uuid}`);
 
 // 新增：按点赞数排序获取课程评论（每页5条）
-const getLessonCommentsByLikes = async (courseId, page = 1, uuid) =>
+const getLessonCommentsOrderByLikes = async (courseId, page = 1, uuid) =>
   await apiRequest(`/comments/likes/${courseId}/${page}/${uuid}`);
 
 // 5. 发布课程评论
