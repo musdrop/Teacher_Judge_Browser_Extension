@@ -30,10 +30,10 @@ const prepareStatements = (env) => {
 		preparedStatements.courseScoreSelect = env.DB.prepare('SELECT score, commentCount FROM course WHERE courseId = ?');
 		preparedStatements.courseUpdate = env.DB.prepare('UPDATE course SET score = ?, commentCount = commentCount + 1 WHERE courseId = ?');
 		preparedStatements.courseInsert = env.DB.prepare(
-			'INSERT INTO course (courseName, teacherName, score, visible, uuid, commentCount) VALUES (?, ?, ?, ?, ?, 1)'
+			'INSERT INTO course (courseName, teacherName, score, commentCount) VALUES (?, ?, ?, 1)'
 		);
 		preparedStatements.commentInsert = env.DB.prepare(
-			"INSERT INTO comment (courseId, commentContent, score, commentTime, likes, dislikes) VALUES (?, ?, ?, datetime('now','+8 hours'), 0, 0)"
+			"INSERT INTO comment (courseId, commentContent, score, commentTime, likes, dislikes, visible, uuid) VALUES (?, ?, ?, datetime('now','+8 hours'), 0, 0, ?, ?)"
 		);
 	}
 };
@@ -96,11 +96,11 @@ const handleCommentPost = async (request) => {
 			(parseFloat(course.commentCount) * parseFloat(course.score) + parseFloat(score)) / (parseFloat(course.commentCount) + 1);
 		await preparedStatements.courseUpdate.bind(newScore, courseId).run();
 	} else {
-		const insertRes = await preparedStatements.courseInsert.bind(courseName, teacherName, score, "pending", uuid).run();
+		const insertRes = await preparedStatements.courseInsert.bind(courseName, teacherName, score).run();
 		cId = insertRes.meta.last_row_id;
 	}
 
-	await preparedStatements.commentInsert.bind(cId, commentContent, score).run();
+	await preparedStatements.commentInsert.bind(cId, commentContent, score, "pending", uuid).run();
 
 	return newResponse('Comment added', true, { status: 201 });
 };
