@@ -27,6 +27,8 @@ combinedContent
   + `// @grant        GM_setValue\n`
   + `// @grant        GM_getValue\n`
   + `// @grant        GM_registerMenuCommand\n`
+  + `// @downloadURL  https://github.com/musdrop/Teacher_Judge_Browser_Extension/releases/download/latest/NTJ.js\n`
+  + `// @updateURL    https://github.com/musdrop/Teacher_Judge_Browser_Extension/releases/download/latest/NTJ.js\n`
   + `// ==/UserScript==\n`;
 
 

@@ -28,6 +28,6 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         token: ${{ secrets.PAT_TOKEN }}
-        tag_name: 'beta1.0'
+        tag_name: 'latest'
         files: |
           ./ext/NTJ.js
