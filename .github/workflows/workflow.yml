@@ -24,7 +24,7 @@ jobs:
 
     - name: Run make.js
       run: node ext/make.js
-
+      
     - name: Release latest version
       uses: softprops/action-gh-release@v2
       with:
@@ -35,18 +35,14 @@ jobs:
 
     - name: Get current version
       id: get_version
-      run: echo "::set-output name=version::$(cat ./ext/manifest.json)"
-
-    - name: Increment version
-      id: increment_version
       run: |
-        version=$(echo "${{ steps.get_version.outputs.version }}" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
-        echo "::set-output name=new_version::$version"
+        version=$(jq -r '.version' ./ext/manifest.json)
+        echo "::set-output name=version::$version"
 
     - name: Release new version
       uses: softprops/action-gh-release@v2
       with:
         token: ${{ secrets.PAT_TOKEN }}
-        tag_name: 'v${{ steps.increment_version.outputs.new_version }}'
+        tag_name: 'v${{ steps.get_version.outputs.version }}'
         files: |
           ./ext/NTJ.js
