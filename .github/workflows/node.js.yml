@@ -21,9 +21,6 @@ jobs:
       with:
         node-version: '18.x'
 
-    - name: Install Octokit
-      run: npm install @octokit/rest
-
     - name: Run make.js
       run: node ext/make.js
 
@@ -31,6 +28,6 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         token: ${{ secrets.PAT_TOKEN }}
-        tag: 'beta1.0'
+        tag_name: 'beta1.0'
         files: |
           ./ext/NTJ.js
