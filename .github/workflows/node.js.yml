@@ -29,24 +29,7 @@ jobs:
       run: node ext/make.js
 
     - name: Create Release
-      id: create_release
-      run: |
-        node -e "
-        const { Octokit } = require('@octokit/rest');
-        const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-        (async () => {
-          const response = await octokit.repos.createRelease({
-            owner: '${{ github.repository_owner }}',
-            repo: '${{ github.event.repository.name }}',
-            tag_name: 'v${{ github.run_number }}',
-            name: 'Release v${{ github.run_number }}',
-            draft: false,
-            prerelease: false,
-          });
-          console.log('Release created:', response.data);
-          console.log('Upload URL:', response.data.upload_url);
-        })();
-        "
+      run: node ext/createRelease.js
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
