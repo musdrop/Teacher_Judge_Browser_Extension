@@ -24,14 +24,6 @@ jobs:
 
     - name: Run make.js
       run: node ext/make.js
-      
-    - name: Release latest version
-      uses: softprops/action-gh-release@v2
-      with:
-        token: ${{ secrets.PAT_TOKEN }}
-        tag_name: 'latest'
-        files: |
-          ./ext/NTJ.js
 
     - name: Get current version
       id: get_version
