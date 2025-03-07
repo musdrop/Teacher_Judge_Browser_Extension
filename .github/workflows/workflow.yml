@@ -7,11 +7,12 @@ on:
   push:
     branches: [ "main", "dev" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
   workflow_dispatch:
 
 jobs:
-  build:
+  build-main:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
@@ -36,5 +37,34 @@ jobs:
       with:
         token: ${{ secrets.PAT_TOKEN }}
         tag_name: 'v${{ steps.get_version.outputs.version }}'
+        files: |
+          ./ext/NTJ.js
+
+  build-dev:
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+
+    - name: Run make.js
+      run: node ext/make.js
+
+    - name: Get current version
+      id: get_version
+      run: |
+        version=$(jq -r '.version' ./ext/manifest.json)
+        echo "::set-output name=version::$version"
+
+    - name: Release new version
+      uses: softprops/action-gh-release@v2
+      with:
+        token: ${{ secrets.PAT_TOKEN }}
+        tag_name: 'v${{ steps.get_version.outputs.version }}-dev'
         files: |
           ./ext/NTJ.js
