@@ -27,18 +27,25 @@ jobs:
 
     - name: Create Release
       id: create_release
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const { data: release } = await github.repos.createRelease({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            tag_name: `v${{ github.run_number }}`,
-            name: `Release v${{ github.run_number }}`,
+      run: |
+        node -e "
+        const { Octokit } = require('@octokit/rest');
+        const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+        (async () => {
+          const response = await octokit.repos.createRelease({
+            owner: '${{ github.repository_owner }}',
+            repo: '${{ github.event.repository.name }}',
+            tag_name: 'v${{ github.run_number }}',
+            name: 'Release v${{ github.run_number }}',
             draft: false,
             prerelease: false,
           });
-          core.setOutput('upload_url', release.upload_url);
+          console.log('Release created:', response.data);
+          console.log('Upload URL:', response.data.upload_url);
+        })();
+        "
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload release asset
       uses: actions/upload-release-asset@v1
