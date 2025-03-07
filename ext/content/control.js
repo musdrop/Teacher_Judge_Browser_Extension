@@ -163,7 +163,7 @@ async function addScoreAndEvaluateColumn(thead, tbody, update) {
       try {
         let res = await getScore(courseInfo);
         courseInfo.课程ID = res.courseId;
-        score =
+        const score =
           res.score === "N/A" ? "暂无评分" : parseFloat(res.score).toFixed(1);
         courseInfo.课程评分 = score;
         scoreSpan.textContent = score;
