@@ -28,7 +28,7 @@ jobs:
         cache: 'npm'
     - run: node /ext/make.js
     - name: Upload release asset
-      uses: actions/upload-release-asset@v
+      uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
