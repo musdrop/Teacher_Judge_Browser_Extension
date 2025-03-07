@@ -1,7 +1,7 @@
 {
   "name": "NUAA教师评价助手",
   "description": "让NUAAer的选课更加科学",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "author": "不愿意透露姓名的NUAAer",
   "manifest_version": 3,
   "permissions": [
