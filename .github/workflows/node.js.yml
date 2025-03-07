@@ -8,6 +8,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -24,10 +25,40 @@ jobs:
     - name: Run make.js
       run: node ext/make.js
 
-    - name: Release
+    - name: Release latest version
       uses: softprops/action-gh-release@v2
       with:
         token: ${{ secrets.PAT_TOKEN }}
         tag_name: 'latest'
+        files: |
+          ./ext/NTJ.js
+
+    - name: Get current version
+      id: get_version
+      run: echo "::set-output name=version::$(cat ./ext/mainfest.json)"
+
+    - name: Increment version
+      id: increment_version
+      run: |
+        version=$(echo "${{ steps.get_version.outputs.version }}" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+        echo "::set-output name=new_version::$version"
+
+    - name: Create new tag
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const newVersion = '${{ steps.increment_version.outputs.new_version }}';
+          github.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: `refs/tags/v${newVersion}`,
+            sha: context.sha,
+          });
+
+    - name: Release new version
+      uses: softprops/action-gh-release@v2
+      with:
+        token: ${{ secrets.PAT_TOKEN }}
+        tag_name: 'v${{ steps.increment_version.outputs.new_version }}'
         files: |
           ./ext/NTJ.js
