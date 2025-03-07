@@ -1,6 +1,6 @@
 const plugin_file_name = "NTJ.js";
 const iconURL = "https://img.picui.cn/free/2025/03/07/67ca7f0d7a64b.png";
-const updateURL = "https://github.com/musdrop/Teacher_Judge_Browser_Extension/releases/download/latest/NTJ.js";
+const updateURL = "https://github.com/musdrop/Teacher_Judge_Browser_Extension/releases/latest/download/NTJ.js";
 const namespace = 'nuaa_teacher_judge';
 
 const fs = require('fs');
