@@ -1,3 +1,7 @@
+# 安装
+[点此安装](https://www.tampermonkey.net/script_installation.php#url=https://github.com/musdrop/Teacher_Judge_Browser_Extension/releases/latest/download/NTJ.js)
+
+
 # 待办
 - [x] 弹窗后禁用原界面滚动  
 - [ ] 评论向量化查重以及AI审核
@@ -20,3 +24,4 @@
 - [x] 评论展示优化，增加对uuid及visible的支持
 - [x] 弹窗界面手动刷新uuid
 - [x] 基于扩展的油猴插件自动化构建支持
+- [ ] 编写安装文档和使用文档
