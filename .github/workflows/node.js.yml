@@ -29,7 +29,7 @@ jobs:
       run: node ext/make.js
 
     - name: Create Release
-      run: node ext/createRelease.js
+      run: node ext/createRelease.mjs
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
