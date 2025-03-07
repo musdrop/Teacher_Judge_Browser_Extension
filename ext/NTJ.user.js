@@ -9,8 +9,8 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
-// @downloadURL  https://github.com/musdrop/Teacher_Judge_Browser_Extension/releases/latest/download/NTJ.js
-// @updateURL    https://github.com/musdrop/Teacher_Judge_Browser_Extension/releases/latest/download/NTJ.js
+// @downloadURL  https://cdn.jsdelivr.net/gh/musdrop/Teacher_Judge_Browser_Extension@main/ext/NTJ.user.js
+// @updateURL    https://cdn.jsdelivr.net/gh/musdrop/Teacher_Judge_Browser_Extension@main/ext/NTJ.user.js
 // ==/UserScript==
 
 // /api/usc.js
