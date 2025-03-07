@@ -13,7 +13,7 @@ const manifest = JSON.parse(manifestContent);
 const { name, version, description, author, content_scripts } = manifest;
 const { js, matches } = content_scripts[0];
 
-// 生成油猴插件属性
+// --生成油猴插件属性--
 combinedContent
     += `// ==UserScript==\n`
     + `// @name         ${name}\n`
@@ -28,8 +28,9 @@ combinedContent
     + `// ==/UserScript==\n`;
 
 
-// 读取每个js文件的内容并组合在一起
+// --读取每个js文件的内容并组合--
 js.forEach(script => {
+    // 替换基础API
     if (script === '/api/crx.js') {
         script = '/api/usc.js';
     }
@@ -38,7 +39,7 @@ js.forEach(script => {
     combinedContent += `\n// ${script}\n` + scriptContent;
 });
 
-// 读取popup弹窗
+// --读取popup弹窗并生成独立函数--
 
 // 配置路径
 const inputDir = path.join(__dirname, 'popup');
@@ -131,9 +132,7 @@ ${escapeContent(bodyContent)}\`;
   }
 }`;
 
-// 写入输出文件
-fs.writeFileSync(outputFile, popupCode);
-console.log(`Build success!`);
+// --合并独立弹窗函数到输出文件，注册设置--
 combinedContent += `\n// Popup\n` + popupCode;
 
 // 添加菜单项，绑定创建弹窗函数
