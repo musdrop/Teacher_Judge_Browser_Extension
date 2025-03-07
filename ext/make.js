@@ -1,4 +1,5 @@
 const plugin_file_name = "NTJ.js";
+const iconURL = "https://img.picui.cn/free/2025/03/07/67ca7f0d7a64b.png";
 
 const fs = require('fs');
 const path = require('path');
@@ -15,28 +16,29 @@ const { js, matches } = content_scripts[0];
 
 // --生成油猴插件属性--
 combinedContent
-    += `// ==UserScript==\n`
-    + `// @name         ${name}\n`
-    + `// @namespace    ${author}\n`
-    + `// @version      ${version}\n`
-    + `// @description  ${description}\n`
-    + `// @author       ${author}\n`
-    + `// @include      ${matches}\n`
-    + `// @grant        GM_setValue\n`
-    + `// @grant        GM_getValue\n`
-    + `// @grant        GM_registerMenuCommand\n`
-    + `// ==/UserScript==\n`;
+  += `// ==UserScript==\n`
+  + `// @name         ${name}\n`
+  + `// @namespace    ${author}\n`
+  + `// @version      ${version}\n`
+  + `// @description  ${description}\n`
+  + `// @icon          ${iconURL}\n`
+  + `// @author       ${author}\n`
+  + `// @include      ${matches}\n`
+  + `// @grant        GM_setValue\n`
+  + `// @grant        GM_getValue\n`
+  + `// @grant        GM_registerMenuCommand\n`
+  + `// ==/UserScript==\n`;
 
 
 // --读取每个js文件的内容并组合--
 js.forEach(script => {
-    // 替换基础API
-    if (script === '/api/crx.js') {
-        script = '/api/usc.js';
-    }
-    const scriptPath = path.join(__dirname, script);
-    const scriptContent = fs.readFileSync(scriptPath, 'utf-8');
-    combinedContent += `\n// ${script}\n` + scriptContent;
+  // 替换基础API
+  if (script === '/api/crx.js') {
+    script = '/api/usc.js';
+  }
+  const scriptPath = path.join(__dirname, script);
+  const scriptContent = fs.readFileSync(scriptPath, 'utf-8');
+  combinedContent += `\n// ${script}\n` + scriptContent;
 });
 
 // --读取popup弹窗并生成独立函数--
@@ -56,10 +58,10 @@ const jsContent = fs.readFileSync(path.join(inputDir, 'popup.js'), 'utf-8');
 
 // 转义特殊字符
 function escapeContent(content) {
-    return content
-        .replace(/\\/g, '\\\\')
-        .replace(/`/g, '\\`')
-        .replace(/\${/g, '\\${');
+  return content
+    .replace(/\\/g, '\\\\')
+    .replace(/`/g, '\\`')
+    .replace(/\${/g, '\\${');
 }
 
 // 生成独立函数

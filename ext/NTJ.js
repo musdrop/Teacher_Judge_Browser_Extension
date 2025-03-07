@@ -3,6 +3,7 @@
 // @namespace    oo
 // @version      1.0
 // @description  让NUAAer的选课更加科学
+// @icon          https://img.picui.cn/free/2025/03/07/67ca7f0d7a64b.png
 // @author       oo
 // @include      *://aao-eas.nuaa.edu.cn/eams/*
 // @grant        GM_setValue
