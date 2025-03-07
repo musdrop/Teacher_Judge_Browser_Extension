@@ -65,6 +65,6 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         token: ${{ secrets.PAT_TOKEN }}
-        tag_name: 'v${{ steps.get_version.outputs.version }}-dev'
+        tag_name: 'dev-latest'
         files: |
           ./ext/NTJ.js

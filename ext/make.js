@@ -1,5 +1,6 @@
 const plugin_file_name = "NTJ.js";
 const iconURL = "https://img.picui.cn/free/2025/03/07/67ca7f0d7a64b.png";
+const updateURL = "https://github.com/musdrop/Teacher_Judge_Browser_Extension/releases/download/latest/NTJ.js";
 
 const fs = require('fs');
 const path = require('path');
@@ -27,8 +28,8 @@ combinedContent
   + `// @grant        GM_setValue\n`
   + `// @grant        GM_getValue\n`
   + `// @grant        GM_registerMenuCommand\n`
-  + `// @downloadURL  https://github.com/musdrop/Teacher_Judge_Browser_Extension/releases/download/latest/NTJ.js\n`
-  + `// @updateURL    https://github.com/musdrop/Teacher_Judge_Browser_Extension/releases/download/latest/NTJ.js\n`
+  + `// @downloadURL  ${updateURL}\n`
+  + `// @updateURL    ${updateURL}\n`
   + `// ==/UserScript==\n`;
 
 
