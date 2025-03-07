@@ -297,7 +297,7 @@ function evaluateCourseWindow(courseInfo, handleInfoChange) {
   popup.appendChild(commentsContainer);
   popup.appendChild(inputContainer);
   overlay.appendChild(popup);
-  document.body.appendChild(loadingOverlay);
+  overlay.appendChild(loadingOverlay);
   document.body.appendChild(overlay);
 
   // 显示弹窗

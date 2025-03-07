@@ -2,6 +2,7 @@
   "name": "NUAA教师评价助手",
   "description": "让NUAAer的选课更加科学",
   "version": "1.0",
+  "author": "oo",
   "manifest_version": 3,
   "permissions": [
     "storage",
@@ -17,8 +18,9 @@
   "content_scripts": [
     {
       "js": [
+        "/api/crx.js",
         "/content/tools.js",
-        "/content/api.js",
+        "/content/request.js",
         "/content/data.js",
         "/content/comment.js",
         "/content/control.js",

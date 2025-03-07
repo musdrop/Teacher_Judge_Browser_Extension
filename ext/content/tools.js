@@ -3,14 +3,12 @@ if (!localStorage.getItem('tj_orderBy')) {
     localStorage.setItem('tj_orderBy', 'time')
 }
 
-
 // 设置样式的辅助函数
 function setStyles(element, styles) {
     for (const property in styles) {
         element.style[property] = styles[property];
     }
 }
-
 
 // 弹窗函数
 function showToast(message, type) {
@@ -61,33 +59,13 @@ function showToast(message, type) {
     }, 2000);
 }
 
-// 生成新的 UUID
-function newUUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        const r = (Math.random() * 16) | 0,
-            v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-    });
-}
-
 // 获取 UUID
-function getUUID() {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.get(['tj_uuid'], (result) => {
-            let uuid = result.tj_uuid;
-            if (!uuid) {
-                // 生成一个 UUID
-                uuid = newUUID();
-                // 保存到本地
-                saveUUID(uuid);
-            }
-            resolve(uuid);
-        });
-    });
+async function getUUID() {
+    return await localStorageGet('tj_uuid');
 }
 
 function saveUUID(uuid) {
-    chrome.storage.local.set({ tj_uuid: uuid });
+    localStorageSet({ tj_uuid: uuid });
 }
 
 function updateUUID() {
