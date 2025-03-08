@@ -1,12 +1,12 @@
 # 安装
 - 已安装油猴扩展 [点此直接安装本插件](https://www.tampermonkey.net/script_installation.php#url=https://cdn.jsdelivr.net/gh/musdrop/Teacher_Judge_Browser_Extension@main/ext/NTJ.user.js)
-- 未安装油猴扩展 [点此查看油猴安装教程]()
+- 未安装油猴扩展 [点此安装油猴](https://www.tampermonkey.net/index.php)
 
 
 # 待办
 - [x] 弹窗后禁用原界面滚动  
 - [ ] 评论向量化查重以及AI审核
-- [ ] 点赞防攻击
+- [ ] 点赞评论防攻击，人机验证
 - [x] 点赞点踩效果优化
 - [x] 评论发送效果优化
 - [x] 按时间排序（默认情况）
