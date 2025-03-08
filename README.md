@@ -1,5 +1,6 @@
 # 安装
-[点此安装](https://www.tampermonkey.net/script_installation.php#url=https://github.com/musdrop/Teacher_Judge_Browser_Extension/releases/latest/download/NTJ.js)
+- 已安装油猴扩展 [点此直接安装本插件](https://www.tampermonkey.net/script_installation.php#url=https://cdn.jsdelivr.net/gh/musdrop/Teacher_Judge_Browser_Extension@main/ext/NTJ.user.js)
+- 未安装油猴扩展 [点此查看油猴安装教程]()
 
 
 # 待办
