@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "tj-dev",
+	"name": "tj",
 	"main": "src/index.js",
 	"compatibility_date": "2025-02-24",
 	"observability": {
@@ -19,7 +19,7 @@
   ],
     "routes": [
     {
-      "pattern": "dev.tj.musdrop.top",
+      "pattern": "tj.musdrop.top",
       "custom_domain": true
     }
   ]
