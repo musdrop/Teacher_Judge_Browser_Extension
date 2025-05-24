@@ -2,6 +2,20 @@
 - 已安装油猴扩展 [点此直接安装本插件](https://www.tampermonkey.net/script_installation.php#url=https://cdn.jsdelivr.net/gh/musdrop/Teacher_Judge_Browser_Extension@main/ext/NTJ.user.js)
 - 未安装油猴扩展 [点此安装油猴](https://www.tampermonkey.net/index.php)
 
+# 项目结构
+```
+├── ext/            # 浏览器扩展项目
+│   ├── api/        # 跨项目api封装
+│   ├── assets/
+│   ├── content/    # 前端核心逻辑
+│   ├── popup/      # 设置页面
+│   ├── make.js     # 编译脚本
+│   └── manifest.json
+└── worker/         # 后端项目
+    ├── src/
+    │   └── index.js # 代码
+    └── wrangler.jsonc # workers项目配置文件
+```
 
 # 待办
 - [x] 弹窗后禁用原界面滚动  
